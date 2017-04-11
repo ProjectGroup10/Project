@@ -1,0 +1,74 @@
+import java.util.ArrayList;
+import java.util.Date;
+
+public class Timeline implements displayInterface
+{
+
+	private int id = 0 ;
+	private String title ;
+	private Date startTime ;
+	private Date endTime ;
+	private ArrayList<Event> listEvent ;
+	
+	public Timeline (int id, String title, Date startTime, Date endTime, ArrayList<Event> listEvent)
+	{
+		this.id = id++ ;
+		this.title = title ;
+		this.startTime = startTime ;
+		this.endTime = endTime ;
+		this.listEvent = new ArrayList<Event>() ;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public ArrayList<Event> getListEvent() {
+		return listEvent;
+	}
+
+	public void setListEvent(ArrayList<Event> listEvent) {
+		this.listEvent = listEvent;
+	}
+
+	@Override
+	public void display() {
+		
+		System.out.println("Title of timeline : " + title + "\n"+ 
+							"Start time " + startTime.toString() + "\n" + 
+							"End Time " + endTime.toString());	
+		for (Event event : listEvent) 
+		{
+		    System.out.println("Title of event " + event.getTitle() + "\n" + "");
+		}
+		
+	}
+}

@@ -1,0 +1,20 @@
+import java.util.ArrayList;
+import java.util.Date;
+
+public class Event {
+
+	private int id = 0 ;
+	private String title ;
+	private Date startTime ;
+	private boolean duration ; 
+	private Date endTime ;
+	
+	public Event (id, title, startTime, duration, endTime)
+	{
+		this.id = id++ ;
+		this.title = title ;
+		this.startTime = startTime ;
+		this.duration = duration ;
+		this.endTime = endTime ;
+	}
+}

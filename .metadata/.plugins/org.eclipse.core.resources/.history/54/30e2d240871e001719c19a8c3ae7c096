@@ -1,0 +1,21 @@
+import java.util.ArrayList;
+
+public class TimelineCollection 
+{
+	private ArrayList<Timeline> listTimeline ;
+	
+	public static void main(String[] args) 
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	public ArrayList<Timeline> getListTimeline() {
+		return listTimeline;
+	}
+
+	public void setListTimeline(ArrayList<Timeline> listTimeline) {
+		this.listTimeline = listTimeline;
+	}
+
+}
