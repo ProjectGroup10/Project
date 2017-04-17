@@ -59,9 +59,6 @@ public class MainController  {
             public void handle(ActionEvent e) 
             {
             	title = name.getText();
-            	System.out.println("Timeline name : " + name.getText());
-            	System.out.println("Start date : " + startDatePicker.getValue());
-            	System.out.println("End date : " + endDatePicker.getValue());
             	Timeline timeline = new Timeline(title,startDatePicker,endDatePicker);
             	TimelineCollection.add(timeline);
             	timeline.display(vBoxModules);

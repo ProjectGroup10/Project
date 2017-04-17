@@ -1,27 +1,17 @@
 package application;
-import java.nio.file.Path;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 
 public class Timeline 
 {
@@ -82,7 +72,8 @@ public class Timeline
 		this.listEvent = listEvent;
 	}
 
-	public void display(VBox v) {
+	public void display(VBox v) 
+	{
 		
 		String StartDate = startDate.getValue().toString();
     	String[] splitStartDate = StartDate.split("-");
@@ -95,23 +86,30 @@ public class Timeline
     	
     	int diffyear = endYear-startYear ;
     	
-        NumberAxis xAxis = new NumberAxis(startYear,endYear,1);
-        xAxis.setMinorTickCount(12);
-        xAxis.setLabel("Years");
-        //Help
+    	ObservableList<String> months = FXCollections.observableArrayList() ;
+    	
+    	for (int i = 0; i < diffyear ; i++)
+    	{
+    		int date = Integer.parseInt(splitStartDate[0])+i ; 
+        	months.addAll("Jan "+ Integer.toString(date),"Feb "+ Integer.toString(date),"Mar "+ Integer.toString(date)
+        	,"Apr "+ Integer.toString(date),"May "+ Integer.toString(date),"Jun "+ Integer.toString(date),
+        	"Jul "+ Integer.toString(date),"Aug "+ Integer.toString(date),"Sep "+ Integer.toString(date),
+        	"Oct "+ Integer.toString(date),"Nov "+ Integer.toString(date),"Dec "+ Integer.toString(date));
+    	}
+    	
+        CategoryAxis xAxis = new CategoryAxis(months);
+        xAxis.setLabel("Months (Years)");
+        xAxis.setTickLabelRotation(90);
+        
         
         NumberAxis yAxis = new NumberAxis(0,31,5);
         yAxis.setLabel("Days");
-        // Change it to months
         
-        ScatterChart<Number,Number> scatterChart = new ScatterChart<Number, Number>(xAxis, yAxis);
-        System.out.println("title : " + title);
-       scatterChart.setTitle(title);
-       scatterChart.setMinHeight(450);
-       scatterChart.setMinWidth(diffyear/2 * 500);
-       // scatterChart.setMaxHeight(450);
-       // scatterChart.setMaxWidth(1);
-
+        ScatterChart<String,Number> scatterChart = new ScatterChart<String, Number>(xAxis, yAxis);
+        scatterChart.setTitle(title);
+        scatterChart.setMinHeight(450);
+        scatterChart.setMinWidth(diffyear * 500);
+      
 	
         Button closeButton = new Button("Close all timelines");
        
