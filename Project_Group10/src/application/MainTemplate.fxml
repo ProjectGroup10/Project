@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="VboxLand" prefHeight="499.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+<VBox fx:id="VboxLand" prefHeight="499.0" prefWidth="1000" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <children>
       <AnchorPane fx:id="AnchorPane">
          <children>
@@ -19,15 +19,15 @@
             </MenuButton>
          </children>
       </AnchorPane>
-      <VBox fx:id="vbox_timeline" prefHeight="433.0" prefWidth="660.0">
-         <children>
-            <ScrollPane prefHeight="430.0" prefWidth="660.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-              </content>
-            </ScrollPane>
-         </children>
-      </VBox>
-      
    </children>
+   <children>
+     <ScrollPane fx:id="mainScrollPane" >
+          <content>
+              <VBox fx:id="vBoxModules" prefHeight="800.0" prefWidth="1000"   >
+                  <children>
+                  </children>
+              </VBox>
+          </content>
+     </ScrollPane>
+     </children>
 </VBox>

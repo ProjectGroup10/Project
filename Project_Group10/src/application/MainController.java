@@ -28,8 +28,9 @@ public class MainController  {
 	GregorianCalendar StartDate ;
 	GregorianCalendar EndDate ;
 	ArrayList<Timeline> TimelineCollection = new ArrayList<Timeline>();
-	@FXML VBox VboxLand ;
+	@FXML VBox vBoxModules ;
 
+	
 	public void appearFormTimeline()
 	{
 		Stage stage = new Stage();
@@ -48,7 +49,9 @@ public class MainController  {
 	    vbox.getChildren().addAll(new Label("End Date : "),endDatePicker);
 	    vbox.getChildren().add(submit);
 
+	    
 	    stage.show();
+	    
 	    
 	    submit.setOnAction(new EventHandler<ActionEvent>() 
 	    {
@@ -61,11 +64,13 @@ public class MainController  {
             	System.out.println("End date : " + endDatePicker.getValue());
             	Timeline timeline = new Timeline(title,startDatePicker,endDatePicker);
             	TimelineCollection.add(timeline);
-            	timeline.display(VboxLand);
+            	timeline.display(vBoxModules);
 
             	stage.close();
             }
         });
+	    
+	    
 	   
 	}
 

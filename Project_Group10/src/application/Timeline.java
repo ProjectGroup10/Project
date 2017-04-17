@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
@@ -16,6 +17,8 @@ import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
@@ -88,37 +91,36 @@ public class Timeline
     	String[] splitEndDate = EndDate.split("-");
     	int endYear = Integer.parseInt(splitEndDate[0]);
     	
+    	HBox h = new HBox();
     	
+    	int diffyear = endYear-startYear ;
     	
         NumberAxis xAxis = new NumberAxis(startYear,endYear,1);
         xAxis.setMinorTickCount(12);
         xAxis.setLabel("Years");
-        xAxis.setLayoutX(10);
-      
-        NumberAxis yAxis = new NumberAxis(1,31,5);
+        
+        NumberAxis yAxis = new NumberAxis(0,31,5);
         yAxis.setLabel("Days");
         // Change it to months
         
         ScatterChart<Number,Number> scatterChart = new ScatterChart<Number, Number>(xAxis, yAxis);
-        scatterChart.setPrefHeight(800);
         System.out.println("title : " + title);
-        scatterChart.setTitle(title);
-        Button closeButton = new Button("Close all timelines");
-        
-        XYChart.Series series1 = new XYChart.Series();
-        series1.setName("Events");
-        series1.getData().add(new XYChart.Data(2017.5, 25));
-        series1.getData().add(new XYChart.Data(2017.3, 25));
-        series1.getData().add(new XYChart.Data(2017.4, 25));
+       scatterChart.setTitle(title);
+       scatterChart.setMinHeight(450);
+       scatterChart.setMinWidth(diffyear/2 * 500);
+       // scatterChart.setMaxHeight(450);
+       // scatterChart.setMaxWidth(1);
 
-        
-        series1.getData().remove(1);
-        
-        scatterChart.getData().add(series1);
+	
+        Button closeButton = new Button("Close all timelines");
+       
         StackPane root = new StackPane();
         root.getChildren().add(scatterChart);
        
-        v.getChildren().addAll(closeButton,root);
+        h.getChildren().add(root);
+	    
+        v.getChildren().add(h);
+       
         /*
         closeButton.setOnAction(new EventHandler<ActionEvent>() 
 	    {
