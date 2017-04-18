@@ -87,10 +87,10 @@ public class Timeline
     	int diffyear = endYear-startYear ;
     	
     	ObservableList<String> months = FXCollections.observableArrayList() ;
-    	
-    	for (int i = 0; i < diffyear ; i++)
+    	int date ;
+    	for (int i = 0; i <= diffyear ; i++)
     	{
-    		int date = Integer.parseInt(splitStartDate[0])+i ; 
+    		date = Integer.parseInt(splitStartDate[0])+i ; 
         	months.addAll("Jan "+ Integer.toString(date),"Feb "+ Integer.toString(date),"Mar "+ Integer.toString(date)
         	,"Apr "+ Integer.toString(date),"May "+ Integer.toString(date),"Jun "+ Integer.toString(date),
         	"Jul "+ Integer.toString(date),"Aug "+ Integer.toString(date),"Sep "+ Integer.toString(date),
@@ -108,7 +108,7 @@ public class Timeline
         ScatterChart<String,Number> scatterChart = new ScatterChart<String, Number>(xAxis, yAxis);
         scatterChart.setTitle(title);
         scatterChart.setMinHeight(450);
-        scatterChart.setMinWidth(diffyear * 500);
+        scatterChart.setMinWidth((diffyear+1) * 500);
       
 	
         Button closeButton = new Button("Close all timelines");
