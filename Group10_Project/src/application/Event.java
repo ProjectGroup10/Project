@@ -1,24 +1,30 @@
 package application;
 
-import java.util.Date;
+import java.time.LocalDate;
+
+import javafx.scene.image.Image;
 
 public class Event {
 
 	private int id = 0 ;
 	private String title ;
 	private String description ; 
-	private Date startTime ;
+	private LocalDate startTime ;
 	private boolean duration ; 
-	private Date endTime ;
+	private LocalDate endTime ;
+	private Image imageview;
 	
-	public Event (String title, String description, Date startTime, boolean duration, Date endTime)
+	public Event (String title, String description, LocalDate startTime, boolean duration, LocalDate endTime,Image view)
 	{
 		this.id = id++ ;
-		this.title = title ;
-		this.description = description;
-		this.startTime = startTime ;
-		this.duration = duration ;
-		this.endTime = endTime ;
+		setId(this.id);
+		setTitle(title);
+		setDescription(description);
+		setStartTime(startTime);
+		setDuration(duration);
+		setEndTime(endTime);
+		setImage(view);
+		
 	}
 
 	public int getId() {
@@ -45,11 +51,11 @@ public class Event {
 		this.description = description;
 	}
 
-	public Date getStartTime() {
+	public LocalDate getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(Date startTime) {
+	public void setStartTime(LocalDate startTime) {
 		this.startTime = startTime;
 	}
 
@@ -61,14 +67,22 @@ public class Event {
 		this.duration = duration;
 	}
 
-	public Date getEndTime() {
+	public LocalDate getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(Date endTime) {
+	public void setEndTime(LocalDate endTime) {
 		this.endTime = endTime;
 	}
 	
+	public Image getImage() {
+		return imageview;
+	}
+
+	public void setImage(Image i) {
+		this.imageview = i;
+	}
+
 	public void modifyEvent(Event e1)
 	{
 		//set
