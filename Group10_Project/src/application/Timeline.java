@@ -1,5 +1,4 @@
 package application;
-<<<<<<< HEAD
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -29,12 +28,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-=======
-
-import java.util.ArrayList;
-import javafx.scene.control.DatePicker;
-
->>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 
 public class Timeline 
 {
@@ -44,11 +37,7 @@ public class Timeline
 	private DatePicker startDate ; 
 	private DatePicker endDate ;
 	private ArrayList<Event> listEvent ;
-<<<<<<< HEAD
     private LineChart<String,Number> lineChart ;
-=======
-
->>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 
 	public Timeline (String title, DatePicker startTime, DatePicker endTime)
 	{
@@ -72,17 +61,17 @@ public class Timeline
     	int endYear = Integer.parseInt(splitEndDateTimeline[0]);
     	
     	// Used to define the size of the line chart
-    	int diffYear = endYear-startYear ;
+    	int diffyear = endYear-startYear ;
     	
     	ObservableList<String> months = FXCollections.observableArrayList() ;
-
-    	for (int i = 0; i <= diffYear ; i++)
+    	int date ;
+    	for (int i = 0; i <= diffyear ; i++)
     	{
-    		startYear = Integer.parseInt(splitStartDateTimeline[0])+i ; 
-        	months.addAll("Jan "+ Integer.toString(startYear),"Feb "+ Integer.toString(startYear),"Mar "+ Integer.toString(startYear)
-        	,"Apr "+ Integer.toString(startYear),"May "+ Integer.toString(startYear),"Jun "+ Integer.toString(startYear),
-        	"Jul "+ Integer.toString(startYear),"Aug "+ Integer.toString(startYear),"Sep "+ Integer.toString(startYear),
-        	"Oct "+ Integer.toString(startYear),"Nov "+ Integer.toString(startYear),"Dec "+ Integer.toString(startYear));
+    		date = Integer.parseInt(splitStartDateTimeline[0])+i ; 
+        	months.addAll("Jan "+ Integer.toString(date),"Feb "+ Integer.toString(date),"Mar "+ Integer.toString(date)
+        	,"Apr "+ Integer.toString(date),"May "+ Integer.toString(date),"Jun "+ Integer.toString(date),
+        	"Jul "+ Integer.toString(date),"Aug "+ Integer.toString(date),"Sep "+ Integer.toString(date),
+        	"Oct "+ Integer.toString(date),"Nov "+ Integer.toString(date),"Dec "+ Integer.toString(date));
     	}
     	
         CategoryAxis xAxis = new CategoryAxis(months);
@@ -94,9 +83,9 @@ public class Timeline
         yAxis.setLabel("Days");
         
         lineChart = new LineChart<String, Number>(xAxis, yAxis);
-        lineChart.setTitle(title + "From " + startDateTimeline + " to " + endDateTimeline);
+        lineChart.setTitle(title + "(From " + startDateTimeline + " to " + endDateTimeline + ")");
         lineChart.setMinHeight(450);
-        lineChart.setMinWidth((diffYear+1) * 500);
+        lineChart.setMinWidth((diffyear+1) * 500);
 	}
 
 	public int getId() {
@@ -138,7 +127,6 @@ public class Timeline
 	public void setListEvent(ArrayList<Event> listEvent) {
 		this.listEvent = listEvent;
 	}
-<<<<<<< HEAD
 
 	public void display(VBox v) 
 	{
@@ -167,6 +155,7 @@ public class Timeline
         StackPane root = new StackPane();
         root.getChildren().add(lineChart);
         h.getChildren().add(menuButton);
+        
         h.getChildren().addAll(root);
         v.getChildren().add(h);
        
@@ -234,11 +223,6 @@ public class Timeline
 	}
 	
 	public void addEvent(Event event)
-=======
-	
-		
-	public void addTimeline(Event e)
->>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 	{
     	listEvent.add(event);
 
@@ -455,7 +439,7 @@ public class Timeline
         endDateEvent.setDayCellFactory(dayCellFactory);
         startDateEvent.setDayCellFactory(dayCellFactory);
 	}
-
+	
 	public void modifyEvent(Event e)
 	{
 		for(Event event : listEvent)

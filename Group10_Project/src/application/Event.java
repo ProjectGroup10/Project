@@ -1,11 +1,5 @@
 package application;
 
-<<<<<<< HEAD
-=======
-import java.time.LocalDate;
-
-import javafx.scene.image.Image;
->>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -37,7 +31,6 @@ import javafx.util.Callback;
 public  class Event {
 
 	private int id = 0 ;
-<<<<<<< HEAD
 	private String TitleEvent;
 	private String DescEvent;
 	private DatePicker StartDatePickerEvent;
@@ -56,26 +49,6 @@ public  class Event {
 		this.EndDatePickerEvent = EndDatePickerEvent ;
 		this.series = new XYChart.Series<String, Number>();
 		//this.imageEvent = imageEvent;
-=======
-	private String title ;
-	private String description ; 
-	private LocalDate startTime ;
-	private boolean duration ; 
-	private LocalDate endTime ;
-	private Image imageview;
-	
-	public Event (String title, String description, LocalDate startTime, boolean duration, LocalDate endTime,Image view)
-	{
-		this.id = id++ ;
-		setId(this.id);
-		setTitle(title);
-		setDescription(description);
-		setStartTime(startTime);
-		setDuration(duration);
-		setEndTime(endTime);
-		setImage(view);
-		
->>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 	}
 
 	public XYChart.Series<String, Number> getSeries() {
@@ -102,7 +75,6 @@ public  class Event {
 		DescEvent = descEvent;
 	}
 
-<<<<<<< HEAD
 	
 	public int getId() {
 		return id;
@@ -110,14 +82,6 @@ public  class Event {
 
 	public void setId(int id) {
 		this.id = id;
-=======
-	public LocalDate getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(LocalDate startTime) {
-		this.startTime = startTime;
->>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 	}
 
 	public boolean isDuration() {
@@ -128,7 +92,6 @@ public  class Event {
 		this.duration = duration;
 	}
 
-<<<<<<< HEAD
 	
 
 	public DatePicker getStartDatePickerEvent() {
@@ -137,14 +100,6 @@ public  class Event {
 
 	public void setStartDatePickerEvent(DatePicker startDatePickerEvent) {
 		StartDatePickerEvent = startDatePickerEvent;
-=======
-	public LocalDate getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(LocalDate endTime) {
-		this.endTime = endTime;
->>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 	}
 
 	public DatePicker getEndDatePickerEvent() {
@@ -162,31 +117,5 @@ public  class Event {
 	public void setImageEvent(Image imageEvent) {
 		this.imageEvent = imageEvent;
 	}
-
-	
-<<<<<<< HEAD
-	public void display (LineChart<String,Number> l, DatePicker sd, DatePicker ed )
-=======
-	public Image getImage() {
-		return imageview;
-	}
-
-	public void setImage(Image i) {
-		this.imageview = i;
-	}
-
-	public void modifyEvent(Event e1)
->>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
-	{
-		
-    
-       
-      
-        
-	}
-	
-	
-	
-	
 	
 }
