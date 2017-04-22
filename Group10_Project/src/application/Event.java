@@ -1,32 +1,9 @@
 package application;
 
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
-import javafx.scene.control.Button;
-import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
-//import javafx.scene.input.MouseEvent;
-//import java.awt.event.MouseEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.util.Callback;
 
 public  class Event {
 
@@ -39,7 +16,7 @@ public  class Event {
 	private boolean duration ; 
 	private XYChart.Series<String, Number> series ;
 
-	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent, DatePicker EndDatePickerEvent,boolean duration/*, Image imageEvent*/)
+	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent, DatePicker EndDatePickerEvent, boolean duration/*, Image imageEvent*/)
 	{
 		this.id = id++ ;
 		this.TitleEvent = TitleEvent ;
@@ -51,6 +28,7 @@ public  class Event {
 		//this.imageEvent = imageEvent;
 	}
 
+	
 	public XYChart.Series<String, Number> getSeries() {
 		return series;
 	}
@@ -91,8 +69,6 @@ public  class Event {
 	public void setDuration(boolean duration) {
 		this.duration = duration;
 	}
-
-	
 
 	public DatePicker getStartDatePickerEvent() {
 		return StartDatePickerEvent;

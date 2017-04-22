@@ -8,13 +8,13 @@
 
 <VBox fx:id="VboxLand" prefHeight="499.0" prefWidth="1000" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <children>
-      <AnchorPane fx:id="AnchorPane">
+      <AnchorPane>
          <children>
             <MenuButton fx:id="Timeline" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="118.0" text="Timeline">
               <items>
-                <MenuItem fx:id="AddTimeline" mnemonicParsing="false" onAction="#appearFormTimeline" text="Add Timeline" />
-                <MenuItem fx:id="LoadTimeline" mnemonicParsing="false" text="Load Timelines" />
-                <MenuItem fx:id="SaveTimeline" mnemonicParsing="false" text="Save Timelines" />
+                <MenuItem  mnemonicParsing="false" onAction="#appearFormTimeline" text="Add Timeline" />
+                <MenuItem  mnemonicParsing="false" onAction="#loadTimelines" text="Load Timelines" />
+                <MenuItem  mnemonicParsing="false" onAction="#saveTimelines" text="Save Timelines" />
               </items>
             </MenuButton>
          </children>

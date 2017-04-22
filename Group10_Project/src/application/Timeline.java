@@ -2,11 +2,11 @@ package application;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -39,6 +39,7 @@ public class Timeline
 	private ArrayList<Event> listEvent ;
     private LineChart<String,Number> lineChart ;
 
+
 	public Timeline (String title, DatePicker startTime, DatePicker endTime)
 	{
 		this.id = id++ ;
@@ -50,6 +51,35 @@ public class Timeline
 		
 	}
 	
+
+	public DatePicker getStartDate() {
+		return startDate;
+	}
+
+
+	public void setStartDate(DatePicker startDate) {
+		this.startDate = startDate;
+	}
+
+
+	public DatePicker getEndDate() {
+		return endDate;
+	}
+
+
+	public void setEndDate(DatePicker endDate) {
+		this.endDate = endDate;
+	}
+
+
+	public LineChart<String, Number> getLineChart() {
+		return lineChart;
+	}
+
+
+	public void setLineChart(LineChart<String, Number> lineChart) {
+		this.lineChart = lineChart;
+	}
 
 	private void initLineChart() 
 	{
@@ -83,7 +113,7 @@ public class Timeline
         yAxis.setLabel("Days");
         
         lineChart = new LineChart<String, Number>(xAxis, yAxis);
-        lineChart.setTitle(title + "(From " + startDateTimeline + " to " + endDateTimeline + ")");
+        lineChart.setTitle(title + " (From " + startDateTimeline + " to " + endDateTimeline + ")");
         lineChart.setMinHeight(450);
         lineChart.setMinWidth((diffyear+1) * 500);
 	}
@@ -104,70 +134,12 @@ public class Timeline
 		this.title = title;
 	}
 
-	public DatePicker getStartTime() {
-		return startDate;
-	}
-
-	public void setStartTime(DatePicker startTime) {
-		this.startDate = startTime;
-	}
-
-	public DatePicker getEndTime() {
-		return endDate;
-	}
-
-	public void setEndTime(DatePicker endTime) {
-		this.endDate = endTime;
-	}
-
 	public ArrayList<Event> getListEvent() {
 		return listEvent;
 	}
 
 	public void setListEvent(ArrayList<Event> listEvent) {
 		this.listEvent = listEvent;
-	}
-
-	public void display(VBox v) 
-	{
-    	HBox h = new HBox();
-
-        MenuItem DeleteTimeLine = new MenuItem("Delete Timeline");
-        MenuItem AddEvent = new MenuItem("Add Event");
-        MenuItem ModifyEvent = new MenuItem("Modify Event");
-        MenuItem DeleteEvent = new MenuItem("Delete Event");
-
-
-        MenuButton menuButton = new MenuButton("Options", null, DeleteTimeLine, AddEvent , ModifyEvent, DeleteEvent);
-        
-       
-        AddEvent.setOnAction(new EventHandler<ActionEvent>(){
-
-			@Override
-			public void handle(ActionEvent event) 
-			{
-				appearFormEvent();
-			}
-        	  
-        });
-        
-
-        StackPane root = new StackPane();
-        root.getChildren().add(lineChart);
-        h.getChildren().add(menuButton);
-        
-        h.getChildren().addAll(root);
-        v.getChildren().add(h);
-       
-        
-        DeleteTimeLine.setOnAction(new EventHandler<ActionEvent>() 
-	    {
-            @Override
-            public void handle(ActionEvent e) 
-            {
-            	v.getChildren().remove(h);
-            }
-	    });
 	}
 
 	public void appearFormEvent()
@@ -225,6 +197,7 @@ public class Timeline
 	public void addEvent(Event event)
 	{
     	listEvent.add(event);
+    	
 
     	String StartDate = event.getStartDatePickerEvent().getValue().toString();
 		String EndDate = "" ;
@@ -454,6 +427,7 @@ public class Timeline
 		
 		
 	}
+	
 	public void addEventModified(Event e)
 	{
 		
