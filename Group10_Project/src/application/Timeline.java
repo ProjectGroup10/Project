@@ -1,4 +1,5 @@
 package application;
+<<<<<<< HEAD
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -28,6 +29,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+=======
+
+import java.util.ArrayList;
+import javafx.scene.control.DatePicker;
+
+>>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 
 public class Timeline 
 {
@@ -37,7 +44,11 @@ public class Timeline
 	private DatePicker startDate ; 
 	private DatePicker endDate ;
 	private ArrayList<Event> listEvent ;
+<<<<<<< HEAD
     private LineChart<String,Number> lineChart ;
+=======
+
+>>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 
 	public Timeline (String title, DatePicker startTime, DatePicker endTime)
 	{
@@ -127,6 +138,7 @@ public class Timeline
 	public void setListEvent(ArrayList<Event> listEvent) {
 		this.listEvent = listEvent;
 	}
+<<<<<<< HEAD
 
 	public void display(VBox v) 
 	{
@@ -222,6 +234,11 @@ public class Timeline
 	}
 	
 	public void addEvent(Event event)
+=======
+	
+		
+	public void addTimeline(Event e)
+>>>>>>> 2424bad8dac71adf2054843d2ae52996769c2238
 	{
     	listEvent.add(event);
 
