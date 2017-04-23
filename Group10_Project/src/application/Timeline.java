@@ -352,7 +352,7 @@ public class Timeline
 	
 	public boolean isDuration(DatePicker sd, DatePicker ed)
 	{
-		if (sd == ed) 
+		if (sd.getValue() == ed.getValue()) 
 			return false;
 		else
 			return true ;

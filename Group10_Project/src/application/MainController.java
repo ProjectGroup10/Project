@@ -17,11 +17,13 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.swing.JFileChooser;
+import javax.swing.plaf.synth.SynthSpinnerUI;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import org.json.simple.JSONObject;
+
+import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -92,13 +94,7 @@ public class MainController implements Initializable {
             {
             	String titleTimeline = name.getText();
             	Timeline timeline = new Timeline(titleTimeline,startDateTimeline,endDateTimeline);
-            	System.out.println("Timeline added : " + titleTimeline);
-            	TimelineCollection.add(timeline);
-            	for(Timeline ti : TimelineCollection)
-            	{
-                	System.out.println("Timeline added : " + ti.getTitle());
-
-            	}
+            	
             	addTimeline(timeline);
 
             	stage.close();
@@ -109,6 +105,8 @@ public class MainController implements Initializable {
 	
 	public void addTimeline(Timeline t) 
 	{
+    	TimelineCollection.add(t);
+
     	HBox h = new HBox();
     
    
@@ -174,42 +172,38 @@ public class MainController implements Initializable {
 	}
 	
 	public void saveTimelines() throws IOException, JSONException
-	{
-		for(Timeline ti : TimelineCollection)
-    	{
-			System.out.println("IN THE SAVE MODE PUTEEUH");
-        	System.out.println("Timeline added : " + ti.getTitle());
-
-    	}
-		
+	{		
 		
 		JSONObject obj = new JSONObject();
-		int i = 0 ;
-		int j = 0 ;
+		JSONArray timelineArray = new JSONArray();
+
 		for (Timeline t : TimelineCollection)
 		{
 			JSONObject timeline = new JSONObject();
-
-			j++ ;
-			timeline.put("TitleTimeline" + j, t.getTitle());
-			timeline.put("StartDateTimeline" + j, t.getStartDate().getValue().toString());
-			timeline.put("EndDateTimeline" + j,  t.getEndDate().getValue().toString());
+			JSONArray event = new JSONArray();
+			
+			timeline.put("TitleTimeline" , t.getTitle());
+			timeline.put("StartDateTimeline", t.getStartDate().getValue().toString());
+			timeline.put("EndDateTimeline",  t.getEndDate().getValue().toString());
 
 			for(Event e : t.getListEvent())
 			{
-				JSONObject event = new JSONObject();
+				JSONObject eventObject = new JSONObject();
 
-				i++ ;
-				event.put("TitleEvent " + i, e.getTitleEvent());
-				event.put("DescEvent" + i, e.getDescEvent());
-				event.put("Duration" + i, e.isDuration());
-				event.put("StartDateEvent" + i, e.getStartDatePickerEvent().getValue().toString());
-				event.put("EndDateEvent" + i,  e.getEndDatePickerEvent().getValue().toString());
-				timeline.put("Event(s)" + i, event);
+				eventObject.put("TitleEvent" , e.getTitleEvent());
+				eventObject.put("DescEvent" , e.getDescEvent());
+				eventObject.put("Duration" , e.isDuration());
+				eventObject.put("StartDateEvent", e.getStartDatePickerEvent().getValue().toString());
+				eventObject.put("EndDateEvent",  e.getEndDatePickerEvent().getValue().toString());
+				event.add(eventObject);
+				timeline.put("Events" ,event);
+
 			}
-			obj.put("Timeline(s)" + j, timeline);
+			timelineArray.add(timeline);
+
 		}
-		//datepicker.init(year, month, day, null);
+		obj.put("Timelines", timelineArray);
+
 
 		JFileChooser chooser = new JFileChooser();
 	    //chooser.setCurrentDirectory(new File("/home/me/Documents"));
@@ -229,25 +223,72 @@ public class MainController implements Initializable {
 	{
         JSONParser parser = new JSONParser();
         FileReader reader = null;
-
-	    
+        	    
 		JFileChooser jFileChooser=new JFileChooser();
 	    int result= jFileChooser.showOpenDialog(null);
 	    if(result==JFileChooser.APPROVE_OPTION)
 	    {  
 	    	File file=jFileChooser.getSelectedFile();
 	    	reader=new FileReader(file);  
-	    }
-	     
-         Object obj = parser.parse(reader);
-         JSONObject content = (JSONObject) obj;
-         JSONObject TimelineCollection = (JSONObject) content.get("Timeline(s)");
+	    }	     
+        Object obj = parser.parse(reader);
+        JSONObject content = (JSONObject) obj;
+        JSONArray TimelineCollection = (JSONArray) content.get("Timelines");
 
-         String array = "[" + content.toString() + "]" ;
-         
-         JSONArray jArray = new JSONArray(array);
+        System.out.println(TimelineCollection.toString());     
+        
+        for(Object o : TimelineCollection)
+        {
+        	JSONObject timeline = (JSONObject) o;
+        	 
+			String TitleTimeline = (String) timeline.get("TitleTimeline");
+			String StartDate = (String) timeline.get("StartDateTimeline");
+			String[] splitStartDateTimeline = StartDate.split("-");
+			int startYear = Integer.parseInt(splitStartDateTimeline[0]);
+			int startMonth = Integer.parseInt(splitStartDateTimeline[1]);
+			int startDay = Integer.parseInt(splitStartDateTimeline[2]);
+			String EndDate = (String) timeline.get("EndDateTimeline");
+			String[] splitEndDateTimeline = EndDate.split("-");
+			int endYear = Integer.parseInt(splitEndDateTimeline[0]);
+			int endMonth = Integer.parseInt(splitEndDateTimeline[1]);
+			int endDay = Integer.parseInt(splitEndDateTimeline[2]);
 
-         
+			
+			DatePicker StartDateTimeline = new DatePicker(LocalDate.of(startYear, startMonth, startDay));
+			DatePicker EndDateTimeline = new DatePicker(LocalDate.of(endYear, endMonth, endDay));
+			Timeline t = new Timeline(TitleTimeline,StartDateTimeline,EndDateTimeline);
+			addTimeline(t);
+        	 
+	        JSONArray EventCollection = (JSONArray) timeline.get("Events");
+	        for(Object e : EventCollection)
+	        {
+	        	JSONObject event = (JSONObject) e;
+	        	String TitleEvent = (String) event.get("TitleEvent");
+	        	
+				String StartDateEvent = (String) event.get("StartDateEvent");
+				System.out.println(StartDateEvent);
+				String[] splitStartDateEvent = StartDateEvent.split("-");
+				int startYearEvent = Integer.parseInt(splitStartDateEvent[0]);
+				int startMonthEvent = Integer.parseInt(splitStartDateEvent[1]);
+				int startDayEvent = Integer.parseInt(splitStartDateEvent[2]);
+				String EndDateEvent = (String) event.get("EndDateEvent");
+				String[] splitEndDateEvent = EndDateEvent.split("-");
+				int endYearEvent = Integer.parseInt(splitEndDateEvent[0]);
+				int endMonthEvent = Integer.parseInt(splitEndDateEvent[1]);
+				int endDayEvent = Integer.parseInt(splitEndDateEvent[2]);
+
+				DatePicker StartDateNewEvent = new DatePicker(LocalDate.of(startYearEvent, startMonthEvent, startDayEvent));
+				DatePicker EndDateNewEvent = new DatePicker(LocalDate.of(endYearEvent, endMonthEvent, endDayEvent));
+
+				
+				
+	        	String DescEvent = (String) event.get("DescEvent");
+	        	boolean duration = (boolean) event.get("Duration");
+	        	Event newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent,EndDateNewEvent,duration);
+	        	t.addEvent(newEvent);
+
+	        }   
+         }
          
 		/*
         try {
