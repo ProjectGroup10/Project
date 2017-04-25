@@ -65,6 +65,10 @@ public class Timeline
 	}
 
 
+	/**
+	 * setter
+	 * @param startDate
+	 */
 	public void setStartDate(DatePicker startDate) {
 		this.startDate = startDate;
 	}
@@ -72,13 +76,16 @@ public class Timeline
 
 	/**
 	 * Getter 
-	 * @return startDate
+	 * @return endDate
 	 */
 	public DatePicker getEndDate() {
 		return endDate;
 	}
 
-
+	/**
+	 * setter
+	 * @param endDate
+	 */
 	public void setEndDate(DatePicker endDate) {
 		this.endDate = endDate;
 	}
@@ -86,41 +93,71 @@ public class Timeline
 
 	/**
 	 * Getter 
-	 * @return startDate
+	 * @return lineChart
 	 */
 	public LineChart<String, Number> getLineChart() {
 		return lineChart;
 	}
 
-
+	/**
+	 * setter
+	 * @param lineChart
+	 */
 	public void setLineChart(LineChart<String, Number> lineChart) {
 		this.lineChart = lineChart;
 	}
 	
+	/**
+	 * Getter 
+	 * @return endDate
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * setter
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * Getter 
+	 * @return endDate
+	 */
 	public String getTitle() {
 		return title;
 	}
 
+	/**
+	 * setter
+	 * @param title
+	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	/**
+	 * Getter 
+	 * @return endDate
+	 */
 	public ArrayList<Event> getListEvent() {
 		return listEvent;
 	}
 
+	/**
+	 * setter
+	 * @param listEvent
+	 */
 	public void setListEvent(ArrayList<Event> listEvent) {
 		this.listEvent = listEvent;
 	}
 
+	/**
+	 * @role this method intialize the lineCart depending on the startDate and the endDate
+	 */
 	private void initLineChart() 
 	{
 		String startDateTimeline = startDate.getValue().toString();
@@ -133,6 +170,7 @@ public class Timeline
     	// Used to define the size of the line chart
     	int diffyear = endYear-startYear ;
     	
+    	// representing the month
     	ObservableList<String> months = FXCollections.observableArrayList() ;
     	int date ;
     	for (int i = 0; i <= diffyear ; i++)
@@ -143,12 +181,12 @@ public class Timeline
         	"Jul "+ Integer.toString(date),"Aug "+ Integer.toString(date),"Sep "+ Integer.toString(date),
         	"Oct "+ Integer.toString(date),"Nov "+ Integer.toString(date),"Dec "+ Integer.toString(date));
     	}
-    	
+    	// xAxis 
         CategoryAxis xAxis = new CategoryAxis(months);
         xAxis.setLabel("Months (Years)");
         xAxis.setTickLabelRotation(90);
         
-        
+        // yAxis represente the days
         NumberAxis yAxis = new NumberAxis(0,31,5);
         yAxis.setLabel("Days");
         
@@ -159,7 +197,10 @@ public class Timeline
 	}
 
 	
-
+	/**
+	 * This method is called when cliking on addEvent, a new window comes and ask to fill the 
+	 * informations corresponding to create an event
+	 */
 	public void appearFormEvent()
 	{
 		Stage stage = new Stage();
@@ -175,6 +216,7 @@ public class Timeline
 	   // Image image= new Image();
 	    Button addImage = new Button("Choose");
         Button submit = new Button("Submit");
+        // method to handle the fact that the end date should be after the start date
         setDatePicker(startDatePickerEvent,endDatePickerEvent);
 
 	    vbox.getChildren().addAll(new Text("Event name : "),nameEvent);
@@ -187,6 +229,7 @@ public class Timeline
 	    
 	    stage.show();
 
+	    // listener when cliking on addImage
 	    addImage.setOnAction(new EventHandler<ActionEvent>() 
 	    {
 
@@ -197,38 +240,47 @@ public class Timeline
 			}
 	    	
 	    });
+	    
+	    // Listener when cliking on submit
 	    submit.setOnAction(new EventHandler<ActionEvent>() 
 	    {
             @Override
             public void handle(ActionEvent e) 
             {
+            	// call the method isDuration to determine if the event is an duration event 
+            	// or an non duratio event
             	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
+            	// creation of the envent 
             	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration);
+            	
             	addEvent(event);
-            	//event.display(lineChart, startDate, endDate);
 
             	stage.close();
             }
         });
 	}
 	
+	/**
+	 * @role method addEvent who permit to add an event to the line chart, and to the list of 
+	 * event corresponding at the special timeline
+	 * @param event
+	 */
 	public void addEvent(Event event)
 	{
+		// add the event to the list of event 
     	listEvent.add(event);
     	
-
     	String StartDate = event.getStartDatePickerEvent().getValue().toString();
 		String EndDate = "" ;
     	String[] splitStartDate = StartDate.split("-");
     	String startYear = splitStartDate[0];
     	int startMonth = Integer.parseInt(splitStartDate[1]);
     	int startDay = Integer.parseInt(splitStartDate[2]);
+    	// call the method chooseMonth depending on which month is selected
     	String monthStart = chooseMonth(startMonth); 
     	String axisXstart = monthStart + startYear ;
-    
-    	// Faire deux classes d'event et ajouter la serie comme variable
-		
-
+    		
+    	// if it's a duration then add an endDate
 		if(event.isDuration())
 		{
 			EndDate = event.getEndDatePickerEvent().getValue().toString();
@@ -240,38 +292,43 @@ public class Timeline
 			String monthEnd = chooseMonth(endMonth); 
 	    	String axisXend = monthEnd + endYear ;
 
+	    	// add the event to the lineChart, using a series from the class event
 	        event.getSeries().setName(event.getTitleEvent());
 	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay));
 	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXend, endDay));
+		    // tooltip permit to display something when just passing the mouse over the event
+	        Tooltip tool = new Tooltip("Add something there");
+		    Tooltip.install( event.getSeries().getNode(), tool);
 		}
-		else
+		else // it's a non duration event
 		{
 			 event.getSeries().setName(event.getTitleEvent());
 			 event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay));
-		     Tooltip tool = new Tooltip("Hello fefjfeiferferjfreijgiofrejrioejgroj");
+			 // tooltip permit to display something when just passing the mouse over the event
+			 Tooltip tool = new Tooltip("Add something there");
 		     Tooltip.install( event.getSeries().getNode(), tool);
-     		
 		}
 		
+		// add the series to the lineChart
         lineChart.getData().add( event.getSeries());	
         
-       
-        
-        for (XYChart.Data<String, Number> ss :  event.getSeries().getData()) {
-	    	 ss.getNode().addEventHandler(MouseEvent.MOUSE_CLICKED,new EventHandler<MouseEvent>() 
-	    	 {
-				@Override
-				public void handle(MouseEvent e) 
+        // for each data for a series
+        for (XYChart.Data<String, Number> ss :  event.getSeries().getData()) 
+        {
+        	// when clicking on the event 
+        	ss.getNode().addEventHandler(MouseEvent.MOUSE_CLICKED,new EventHandler<MouseEvent>() 
+	    	{
+        		public void handle(MouseEvent e) 
 				{
-					
+        			// display a new window with the information of the event 
 					Stage stage = new Stage();
 			        stage.setTitle("Information event");
 				    VBox vbox = new VBox(20);
 				    Scene scene = new Scene(vbox, 400, 400);
 				    stage.setScene(scene);
 				    Label text = null ;
-					//text.setStyle("-fx-background-color: coral; -fx-padding: 10px;");
-					if(event.isDuration())
+				    // if the event is a duration event
+				    if(event.isDuration())
 					{
 						text = new Label("Title Event :  " + event.getTitleEvent() + "\n" +
 								"Start date event : " + StartDate + "\n" + 
@@ -286,6 +343,7 @@ public class Timeline
 								"Description : " + event.getDescEvent() );
 					}
 
+				    // Create three different buttons
 			        Button close = new Button("Close");
 			        Button delete = new Button("Delete");
 			        Button modify = new Button("Modify");
@@ -294,51 +352,51 @@ public class Timeline
 				  
 				    vbox.getChildren().addAll(close,delete,modify);
 
-				    
 				    stage.show();
 				    
-				    close.setOnAction(new EventHandler<ActionEvent>(){
-
-						@Override
-						public void handle(ActionEvent e) {
+				    // Listener for the close button
+				    close.setOnAction(new EventHandler<ActionEvent>()
+				    {
+						public void handle(ActionEvent e) 
+						{
 							stage.close();
-							
 						}
-				    	
 				    });
 				    
-				    delete.setOnAction(new EventHandler<ActionEvent>(){
-
-						@Override
-						public void handle(ActionEvent e) {
+				    // Listener for the delete button
+				    delete.setOnAction(new EventHandler<ActionEvent>()
+				    {
+						public void handle(ActionEvent e) 
+						{
 					        deleteEvent(event);
 					        stage.close();
 						}
-				    	
 				    });
 				    
-				    modify.setOnAction(new EventHandler<ActionEvent>(){
-
-						@Override
-						public void handle(ActionEvent e) {
-							
-							stage.close();
+				    // Listener for the modify button
+				    modify.setOnAction(new EventHandler<ActionEvent>()
+				    {
+						public void handle(ActionEvent e) 
+						{
 							modifyEvent(event);
-
+							stage.close();
 						}
-						});
-					
+					});
 				}
 	    	 });
-        }
-
-	    
-		
+        }	
 	}
 	
+	/**
+	 * @role method who "transform" the integer passed in parameters into the corresponding 
+	 * month
+	 * @param m
+	 * @return month (string)
+	 */
 	public String chooseMonth(int m)
 	{
 		String month = "" ;
+		// depending on which integer 
 		switch(m)
     	{
     		case 1 : month = "Jan " ;
@@ -368,6 +426,12 @@ public class Timeline
 		return month ;
 	}
 	
+	/**
+	 * @role method to determine if the event is a non duration event or a duration event
+	 * @param sd
+	 * @param ed
+	 * @return true, or false
+	 */
 	public boolean isDuration(DatePicker sd, DatePicker ed)
 	{
 		if (sd.getValue() == ed.getValue()) 
@@ -376,25 +440,24 @@ public class Timeline
 			return true ;
 	}
 	
+	/**
+	 * @role method to handle the fact of deleting an event 
+	 * @param e
+	 */
 	public void deleteEvent(Event e)
 	{
+		// remove the event (series) from the timeline (lineChart)
         lineChart.getData().remove(e.getSeries());
-
-		for(Event event : listEvent)
-		{
-			if(event==e)
-			{
-				listEvent.remove(event);	
-				break ;
-			}
-		}
+		// remove the event from the list event 
+		listEvent.remove(e);	
 	}
 	
-	public void saveEvent()
-	{
-		// FILE READER 
-	}
-
+	/**
+	 * @role : This method has been created to insure that a user can select an endDate after
+	 * the startDate
+	 * @param startDateTimeline
+	 * @param endDateTimeline
+	 */
 	public void setDatePicker(DatePicker startDateEvent, DatePicker endDateEvent)
 	{
 		startDateEvent.setValue(startDate.getValue());
@@ -431,21 +494,21 @@ public class Timeline
         startDateEvent.setDayCellFactory(dayCellFactory);
 	}
 	
+	/**
+	 * @role method who permit to modify an event when clicking on the button modify event
+	 * @param e
+	 */
 	public void modifyEvent(Event e)
 	{
-		for(Event event : listEvent)
-		{
-			if(event == e)
-			{
-				listEvent.remove(event);	
-				addEventModified(event);
-				break ;
-			}
-		}
-		
-		
+		listEvent.remove(e);
+		addEventModified(e);
 	}
 	
+	/**
+	 * @role Method similar to addEvent except the fact that we set up the previous information
+	 * of the modified event
+	 * @param e
+	 */
 	public void addEventModified(Event e)
 	{
 		
@@ -474,10 +537,10 @@ public class Timeline
 	    vbox.getChildren().addAll( new Text("Description:"),DescField);
 	    //vbox.getChildren().addAll(new Text("Add Image:"),addImage);
 	    vbox.getChildren().add(submit);
-
 	    
 	    stage.show();
 
+	    // listener when cliking on addImage
 	    addImage.setOnAction(new EventHandler<ActionEvent>() 
 	    {
 
@@ -488,13 +551,18 @@ public class Timeline
 			}
 	    	
 	    });
+	    
+
+	    // listener when cliking on submit
 	    submit.setOnAction(new EventHandler<ActionEvent>() 
 	    {
             @Override
             public void handle(ActionEvent e1) 
             {
+            	// delete the previous event 
             	deleteEvent(e);
             	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
+            	// create the new Event
             	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration);
             	addEvent(event);
             	

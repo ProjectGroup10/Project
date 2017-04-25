@@ -310,7 +310,7 @@ public class MainController  {
 	}
 	
 	/**
-	 * @role : This method has been created to insure that a user can select an endDate before
+	 * @role : This method has been created to insure that a user can select an endDate after
 	 * the startDate
 	 * @param startDateTimeline
 	 * @param endDateTimeline
