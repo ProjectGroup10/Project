@@ -1,4 +1,5 @@
 package application;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -6,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -16,42 +16,50 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+/**
+ * @role This class represent the Timeline itself
+ * @author Meng Li, Frapper Colin
+ * @date : 04/25/2017
+ */
 public class Timeline 
 {
 
-	private int id = 0 ; // id of the timeline 
-	private String title ; // Title of the timeline
+	private int id = 0 ; 
+	private String title ; 
 	private DatePicker startDate ; 
 	private DatePicker endDate ;
+	// List of events
 	private ArrayList<Event> listEvent ;
+	// LineChart who represents the "graphic timeline"
     private LineChart<String,Number> lineChart ;
 
 
 	public Timeline (String title, DatePicker startTime, DatePicker endTime)
 	{
+		//autoincrement id when creating a timeline
 		this.id = id++ ;
 		this.title = title ;
 		this.startDate = startTime ;
 		this.endDate = endTime ;
 		this.listEvent = new ArrayList<Event>() ;
+		// method to initialize the line chart of the corresponding timeline
 		initLineChart();
 		
 	}
 	
 
+	/**
+	 * Getter 
+	 * @return startDate
+	 */
 	public DatePicker getStartDate() {
 		return startDate;
 	}
@@ -62,6 +70,10 @@ public class Timeline
 	}
 
 
+	/**
+	 * Getter 
+	 * @return startDate
+	 */
 	public DatePicker getEndDate() {
 		return endDate;
 	}
@@ -72,6 +84,10 @@ public class Timeline
 	}
 
 
+	/**
+	 * Getter 
+	 * @return startDate
+	 */
 	public LineChart<String, Number> getLineChart() {
 		return lineChart;
 	}
@@ -79,6 +95,30 @@ public class Timeline
 
 	public void setLineChart(LineChart<String, Number> lineChart) {
 		this.lineChart = lineChart;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public ArrayList<Event> getListEvent() {
+		return listEvent;
+	}
+
+	public void setListEvent(ArrayList<Event> listEvent) {
+		this.listEvent = listEvent;
 	}
 
 	private void initLineChart() 
@@ -118,29 +158,7 @@ public class Timeline
         lineChart.setMinWidth((diffyear+1) * 500);
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public ArrayList<Event> getListEvent() {
-		return listEvent;
-	}
-
-	public void setListEvent(ArrayList<Event> listEvent) {
-		this.listEvent = listEvent;
-	}
+	
 
 	public void appearFormEvent()
 	{
