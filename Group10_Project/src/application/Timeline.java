@@ -3,16 +3,20 @@ package application;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -211,6 +215,8 @@ public class Timeline
 
         TextField nameEvent = new TextField();
 	    DatePicker startDatePickerEvent = new DatePicker();
+	    CheckBox duration = new CheckBox();
+	    duration.setText("event with duration ?");
 	    DatePicker endDatePickerEvent = new DatePicker();
 	    TextField DescField = new TextField();
 	   // Image image= new Image();
@@ -221,13 +227,22 @@ public class Timeline
 
 	    vbox.getChildren().addAll(new Text("Event name : "),nameEvent);
 	    vbox.getChildren().addAll(new Text("Start Date : "),startDatePickerEvent);
-	    vbox.getChildren().addAll(new Text("End Date : "),endDatePickerEvent);
+	    vbox.getChildren().add(duration);
+	    ArrayList<Node> l = new ArrayList<Node>();
+	    l.add(new Text("End Date : "));
+	    l.add(endDatePickerEvent);
+	    duration.setOnAction(e ->vbox.getChildren().addAll(5, l));
+	    
+	    
 	    vbox.getChildren().addAll( new Text("Description:"),DescField);
 	    //vbox.getChildren().addAll(new Text("Add Image:"),addImage);
 	    vbox.getChildren().add(submit);
 
 	    
 	    stage.show();
+	    
+		    
+
 
 	    // listener when cliking on addImage
 	    addImage.setOnAction(new EventHandler<ActionEvent>() 
@@ -249,10 +264,12 @@ public class Timeline
             {
             	// call the method isDuration to determine if the event is an duration event 
             	// or an non duratio event
-            	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
-            	// creation of the envent 
-            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration);
-            	
+        	    Event event ;
+				if(duration.isSelected())
+                   	 event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,true);
+        	    else
+                   	 event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,false);
+
             	addEvent(event);
 
             	stage.close();
@@ -518,12 +535,23 @@ public class Timeline
 	    Scene scene = new Scene(vbox, 400, 400);
 	    stage.setScene(scene);
 
+	    CheckBox duration = new CheckBox();
+	    duration.setText("event with duration ?");
+
         TextField nameEvent = new TextField();
         nameEvent.setText(e.getTitleEvent());
 	    DatePicker startDatePickerEvent = new DatePicker();
 	    startDatePickerEvent.setValue(e.getStartDatePickerEvent().getValue());
 	    DatePicker endDatePickerEvent = new DatePicker();
-	    endDatePickerEvent.setValue(e.getEndDatePickerEvent().getValue());
+	    ArrayList<Node> l = new ArrayList<Node>();
+	    l.add(new Text("End Date : "));
+	    l.add(endDatePickerEvent);
+
+
+	    if(e.isDuration())
+	    {
+		    endDatePickerEvent.setValue(e.getEndDatePickerEvent().getValue());
+	    }
 	    TextField DescField = new TextField();
 	    DescField.setText(e.getDescEvent());
 	   // Image image= new Image();
@@ -533,7 +561,10 @@ public class Timeline
 
 	    vbox.getChildren().addAll(new Text("Event name : "),nameEvent);
 	    vbox.getChildren().addAll(new Text("Start Date : "),startDatePickerEvent);
-	    vbox.getChildren().addAll(new Text("End Date : "),endDatePickerEvent);
+	    vbox.getChildren().addAll(duration);
+
+	    duration.setOnAction(ex ->vbox.getChildren().addAll(5, l));
+
 	    vbox.getChildren().addAll( new Text("Description:"),DescField);
 	    //vbox.getChildren().addAll(new Text("Add Image:"),addImage);
 	    vbox.getChildren().add(submit);
@@ -561,10 +592,12 @@ public class Timeline
             {
             	// delete the previous event 
             	deleteEvent(e);
-            	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
-            	// create the new Event
-            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration);
-            	addEvent(event);
+				Event event;
+				if(duration.isSelected())
+                  	 event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,true);
+				else
+                  	 event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,false);
+				addEvent(event);
             	
             	stage.close();
             }

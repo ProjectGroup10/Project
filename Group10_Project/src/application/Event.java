@@ -33,6 +33,18 @@ public  class Event {
 		this.series = new XYChart.Series<String, Number>();
 		//this.imageEvent = imageEvent;
 	}
+	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent,  boolean duration/*, Image imageEvent*/)
+	{
+		this.id = id++ ;
+		this.TitleEvent = TitleEvent ;
+		this.DescEvent = DescEvent;
+		this.StartDatePickerEvent = StartDatePickerEvent ;
+		this.duration = duration ;
+		//this.EndDatePickerEvent = EndDatePickerEvent ;
+		// initialize the series when creating an event
+		this.series = new XYChart.Series<String, Number>();
+		//this.imageEvent = imageEvent;
+	}
 
 	/**
 	 * Getter
