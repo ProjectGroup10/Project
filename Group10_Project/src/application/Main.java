@@ -1,4 +1,4 @@
-package application;
+package application.Group10_Project.src.application;
 	
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,12 +11,12 @@ import javafx.scene.Scene;
  * @author Meng Li, Frapper Colin
  * @date : 04/25/2017
  */
-
-public class Main extends Application {
-	@Override
-	public void start(Stage primaryStage) {
-		try {
-			
+public class Main extends Application 
+{
+	public void start(Stage primaryStage) 
+	{
+		try 
+		{
 			// load the fxml file (start page)
 			Parent root1 = FXMLLoader.load(getClass().getResource("MainTemplate.fxml"));
 			Scene scene = new Scene(root1, 1200,800);
@@ -24,12 +24,15 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
-		} catch(Exception e) {
+		} 
+		catch(Exception e) 
+		{
 			e.printStackTrace();
 		}
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 		launch(args);
 	}
 }
