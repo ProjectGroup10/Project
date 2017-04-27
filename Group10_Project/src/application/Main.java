@@ -6,11 +6,18 @@ import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
-//Hello
+/**
+ * @role This class represent the main
+ * @author Meng Li, Frapper Colin
+ * @date : 04/25/2017
+ */
+
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			
+			// load the fxml file (start page)
 			Parent root1 = FXMLLoader.load(getClass().getResource("MainTemplate.fxml"));
 			Scene scene = new Scene(root1, 1200,800);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
