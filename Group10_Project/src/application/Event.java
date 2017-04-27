@@ -1,9 +1,9 @@
-package application.Group10_Project.src.application;
+package application;
 
 
+import java.awt.image.BufferedImage;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.DatePicker;
-import javafx.scene.image.Image;
 
 /**
  * @role This class represent the event itself
@@ -17,11 +17,12 @@ public  class Event {
 	private String DescEvent;
 	private DatePicker StartDatePickerEvent;
 	private DatePicker EndDatePickerEvent;
-	private Image imageEvent;
+	private BufferedImage imageEvent;
 	private boolean duration ; 
+	private String imageType;
 	private XYChart.Series<String, Number> series ;
 
-	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent, DatePicker EndDatePickerEvent, boolean duration/*, Image imageEvent*/)
+	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent, DatePicker EndDatePickerEvent, boolean duration, BufferedImage imageEvent,String imagetype)
 	{
 		this.id = id++ ;
 		this.TitleEvent = TitleEvent ;
@@ -29,9 +30,10 @@ public  class Event {
 		this.StartDatePickerEvent = StartDatePickerEvent ;
 		this.duration = duration ;
 		this.EndDatePickerEvent = EndDatePickerEvent ;
+		this.imageEvent = imageEvent;
 		// initialize the series when creating an event
 		this.series = new XYChart.Series<String, Number>();
-		//this.imageEvent = imageEvent;
+		this.imageType = imagetype;
 	}
 
 	/**
@@ -147,9 +149,9 @@ public  class Event {
 
 	/**
 	 * Getter
-	 * @return series
+	 * @return imageEvent
 	 */
-	public Image getImageEvent() {
+	public BufferedImage getImageEvent() {
 		return imageEvent;
 	}
 
@@ -157,8 +159,24 @@ public  class Event {
 	 * Setter
 	 * @param imageEvent
 	 */
-	public void setImageEvent(Image imageEvent) {
+	public void setImageEvent(BufferedImage imageEvent) {
 		this.imageEvent = imageEvent;
+	}
+	
+	/**
+	 * Getter
+	 * @return imageEvent
+	 */
+	public String getImageType() {
+		return this.imageType;
+	}
+
+	/**
+	 * Setter
+	 * @param imageEvent
+	 */
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
 	}
 	
 }

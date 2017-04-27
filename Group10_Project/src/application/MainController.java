@@ -1,5 +1,8 @@
-package application.Group10_Project.src.application;
+package application;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -7,11 +10,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-
-import javax.swing.JFileChooser;
-
+import java.util.Base64;
+import javax.imageio.ImageIO;
 import org.json.JSONException;
-
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -38,6 +39,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -217,7 +219,6 @@ public class MainController  {
 			}
         	  
         });
-        
         // Listener when clicking on delete timeline
         DeleteTimeLine.setOnAction(new EventHandler<ActionEvent>() 
 	    {
@@ -258,19 +259,43 @@ public class MainController  {
 			timeline.put("TitleTimeline" , t.getTitle());
 			timeline.put("StartDateTimeline", t.getStartDate().getValue().toString());
 			timeline.put("EndDateTimeline",  t.getEndDate().getValue().toString());
-
+			
 			// foreach the events of a specific timeline from the list of events of this timeline
 			for(Event e : t.getListEvent())
 			{
 				// for each event, a new Json object
 				JSONObject eventObject = new JSONObject();
-				
+				String imageString = null;
+				if(e.getImageEvent() != null&& (!e.getImageType().equals("")))//make sure photo not null
+				{
+					//find the type of image
+					if(e.getImageType().endsWith("png"))
+					{
+						ByteArrayOutputStream bos = new ByteArrayOutputStream();
+						ImageIO.write(e.getImageEvent(), "png", bos);
+						byte[] phots= bos.toByteArray();
+						imageString = Base64.getEncoder().encodeToString(phots).toString();
+					}
+					else if(e.getImageType().endsWith("jpg"))
+					{
+						ByteArrayOutputStream bos = new ByteArrayOutputStream();
+						ImageIO.write(e.getImageEvent(), "jpg", bos);
+						byte[] phots= bos.toByteArray();
+						imageString = Base64.getEncoder().encodeToString(phots).toString();
+					}
+				}
+				else
+				{
+					imageString = " ";
+				}
 				// add the attributes of a event into the JsonObject event
 				eventObject.put("TitleEvent" , e.getTitleEvent());
 				eventObject.put("DescEvent" , e.getDescEvent());
 				eventObject.put("Duration" , e.isDuration());
 				eventObject.put("StartDateEvent", e.getStartDatePickerEvent().getValue().toString());
 				eventObject.put("EndDateEvent",  e.getEndDatePickerEvent().getValue().toString());
+				eventObject.put("Photos", imageString);
+				eventObject.put("ImageType", e.getImageType());
 				// add the event Json object to the Json event array 
 				events.add(eventObject);
 				// add the event Json array to the Json object timeline
@@ -285,20 +310,15 @@ public class MainController  {
 		allTimelines.put("Timelines", timelineArray);
 
 		// JFileChoose use to permit to the user to save the timelines in his own file 
-		JFileChooser chooser = new JFileChooser();
-	    int retrival = chooser.showSaveDialog(null);
-	    if (retrival == JFileChooser.APPROVE_OPTION) 
-	    {
-	    	try(FileWriter fw = new FileWriter(chooser.getSelectedFile()+".json")) 
-	    	{
-	    	    fw.write(allTimelines.toString());
-	    	}
-	    }
+		FileChooser fileChooser = new FileChooser();
+		File file = fileChooser.showOpenDialog(null);
+	    FileWriter fw = new FileWriter(file); 
+	    fw.write(allTimelines.toString());
+	    fw.flush();
+	    fw.close();
 	}
 	
-	
-	@SuppressWarnings("resource")
-	
+		
 	/**
 	 * @role : Method who permit to load a JsonFile where you saved your timelines.
 	 * @throws IOException
@@ -311,14 +331,10 @@ public class MainController  {
         JSONParser parser = new JSONParser();
         // File reader to read the file
         FileReader reader = null;
-        // JFileChoose used to choose the which file you want to load
-		JFileChooser jFileChooser=new JFileChooser();
-	    int result= jFileChooser.showOpenDialog(null);
-	    if(result==JFileChooser.APPROVE_OPTION)
-	    {  
-	    	File file=jFileChooser.getSelectedFile();
-	    	reader=new FileReader(file);  
-	    }	     
+        // FileChooser used to choose the which file you want to load
+        FileChooser fileChooser = new FileChooser();
+		File file = fileChooser.showOpenDialog(null);
+	    reader=new FileReader(file);  
 	    // Parse the reader 
         Object obj = parser.parse(reader);
         // Get the JsonObject
@@ -333,58 +349,45 @@ public class MainController  {
         	JSONObject timeline = (JSONObject) o;
 			String TitleTimeline = (String) timeline.get("TitleTimeline");
 			String StartDate = (String) timeline.get("StartDateTimeline");
-			// Split the string by - (example of StartDate 2017-02-25)
-			String[] splitStartDateTimeline = StartDate.split("-");
-			int startYear = Integer.parseInt(splitStartDateTimeline[0]);
-			int startMonth = Integer.parseInt(splitStartDateTimeline[1]);
-			int startDay = Integer.parseInt(splitStartDateTimeline[2]);
-			
 			String EndDate = (String) timeline.get("EndDateTimeline");
-			String[] splitEndDateTimeline = EndDate.split("-");
-			int endYear = Integer.parseInt(splitEndDateTimeline[0]);
-			int endMonth = Integer.parseInt(splitEndDateTimeline[1]);
-			int endDay = Integer.parseInt(splitEndDateTimeline[2]);
 
 			// Create the DatePicker
-			DatePicker StartDateTimeline = new DatePicker(LocalDate.of(startYear, startMonth, startDay));
-			DatePicker EndDateTimeline = new DatePicker(LocalDate.of(endYear, endMonth, endDay));
+			DatePicker StartDateTimeline = new DatePicker(LocalDate.parse(StartDate));
+			DatePicker EndDateTimeline = new DatePicker(LocalDate.parse(EndDate));
 			// Create the timeline with the previous informations
 			Timeline t = new Timeline(TitleTimeline,StartDateTimeline,EndDateTimeline);
 			// add the timeline
 			addTimeline(t);
-        	 
 			// Json array events
 	        JSONArray EventCollection = (JSONArray) timeline.get("Events");
-	        
 	        // Foreach each events object
 	        for(Object e : EventCollection)
 	        {
 	        	JSONObject event = (JSONObject) e;
 	        	String TitleEvent = (String) event.get("TitleEvent");
-	        	
 				String StartDateEvent = (String) event.get("StartDateEvent");
-
-				String[] splitStartDateEvent = StartDateEvent.split("-");
-				int startYearEvent = Integer.parseInt(splitStartDateEvent[0]);
-				int startMonthEvent = Integer.parseInt(splitStartDateEvent[1]);
-				int startDayEvent = Integer.parseInt(splitStartDateEvent[2]);
 				String EndDateEvent = (String) event.get("EndDateEvent");
-				String[] splitEndDateEvent = EndDateEvent.split("-");
-				int endYearEvent = Integer.parseInt(splitEndDateEvent[0]);
-				int endMonthEvent = Integer.parseInt(splitEndDateEvent[1]);
-				int endDayEvent = Integer.parseInt(splitEndDateEvent[2]);
-
-				DatePicker StartDateNewEvent = new DatePicker(LocalDate.of(startYearEvent, startMonthEvent, startDayEvent));
-				DatePicker EndDateNewEvent = new DatePicker(LocalDate.of(endYearEvent, endMonthEvent, endDayEvent));
-
+				DatePicker StartDateNewEvent = new DatePicker(LocalDate.parse(StartDateEvent));
+				DatePicker EndDateNewEvent = new DatePicker(LocalDate.parse(EndDateEvent));
 	        	String DescEvent = (String) event.get("DescEvent");
 	        	boolean duration = (boolean) event.get("Duration");
-	        	
+	        	String imagetype = (String) event.get("ImageType");
+	        	String photos = (String) event.get("Photos");
+	        	BufferedImage image;
+	        	if(!photos.equals(" "))
+	        	{
+	        		byte[] photosByte = Base64.getDecoder().decode(photos);
+		        	ByteArrayInputStream in = new ByteArrayInputStream(photosByte); 
+		        	image = ImageIO.read(in);
+	        	}
+	        	else
+	        	{
+	        		image = null;
+	        	}
 	        	// create an event 
-	        	Event newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent,EndDateNewEvent,duration);
+	        	Event newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent,EndDateNewEvent,duration,image,imagetype);
 	        	// call the addEvent method from the class Timeline
 	        	t.addEvent(newEvent);
-
 	        }   
          }
 	}

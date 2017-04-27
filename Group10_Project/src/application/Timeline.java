@@ -1,4 +1,4 @@
-package application.Group10_Project.src.application;
+package application;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -30,9 +30,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -47,15 +48,14 @@ import javafx.util.Callback;
  */
 public class Timeline 
 {
-
 	private int id = 0 ; 
 	private String title ; 
+	private String imageType;
 	private DatePicker startDate ; 
 	private DatePicker endDate ;
-	private Image im;
-
 	// List of events
 	private ArrayList<Event> listEvent ;
+	private BufferedImage bufferedImage;
 	// LineChart who represents the "graphic timeline"
     private LineChart<String,Number> lineChart ;
 
@@ -265,6 +265,7 @@ public class Timeline
 		GP.add(submit,1,6);
 		stage.show();
 
+		
 	    // listener when cliking on addImage
 	    addImage.setOnAction(new EventHandler<ActionEvent>() 
 	    {
@@ -273,7 +274,6 @@ public class Timeline
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
 				FileChooser fileChooser = new FileChooser();
-	             
                 FileChooser.ExtensionFilter extFilterjpg =
 		                    new FileChooser.ExtensionFilter("jpg files (*.jpg)", "*.jpg");
 		        FileChooser.ExtensionFilter extFilterpng = 
@@ -281,15 +281,21 @@ public class Timeline
 		            fileChooser.getExtensionFilters()
 		                    .addAll(extFilterjpg, extFilterpng);
 	            File file = fileChooser.showOpenDialog(null);
-	                       
-	            try {
-	                BufferedImage bufferedImage = ImageIO.read(file);
-	                im = SwingFXUtils.toFXImage(bufferedImage, null);
-	            } catch (IOException ex) {
+	            if(file !=null)
+	            {
+	            	try {
+						bufferedImage = ImageIO.read(file);
+						imageType = file.getCanonicalPath().toLowerCase();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 	            }
-
+	            else
+	            {
+	            	bufferedImage = null;
+	            }
 			}
-	    	
 	    });
 	    
 	    // Listener when cliking on submit
@@ -302,7 +308,7 @@ public class Timeline
             	// or an non duratio event
             	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
             	// creation of the envent 
-            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration);
+            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration,bufferedImage,imageType);
             	if(nameEvent.getText() != null && !nameEvent.getText().isEmpty() )
 				{
 					if(event.getStartDatePickerEvent().getValue().getYear() > event.getEndDatePickerEvent().getValue().getYear())
@@ -334,14 +340,12 @@ public class Timeline
 							{
 								
 				            	addEvent(event);
-
 				            	stage.close();
 							}
 						}
 						else
 						{
 			            	addEvent(event);
-
 			            	stage.close();
 						}
 					}
@@ -350,7 +354,6 @@ public class Timeline
 						
 		            	
 		            	addEvent(event);
-
 		            	stage.close();
 					}
 				}
@@ -360,8 +363,8 @@ public class Timeline
 				}
 			}
 		  });						 
-
-            	
+	    bufferedImage = null;
+	    imageType = "";
 	}
 	
 	/**
@@ -383,7 +386,7 @@ public class Timeline
     	// call the method chooseMonth depending on which month is selected
     	String monthStart = chooseMonth(startMonth); 
     	String axisXstart = monthStart + startYear ;
-    		
+	    
     	// if it's a duration then add an endDate
 		if(event.isDuration())
 		{
@@ -427,10 +430,22 @@ public class Timeline
         			// display a new window with the information of the event 
 					Stage stage = new Stage();
 			        stage.setTitle("Information event");
-				    VBox vbox = new VBox(20);
-				    Scene scene = new Scene(vbox, 400, 400);
-				    stage.setScene(scene);
-				    Label text = null ;
+				    HBox hbox = new HBox();
+				    Label text = null;
+				    Image im;
+				    if(event.getImageEvent() != null)
+				    {
+					    im = SwingFXUtils.toFXImage(event.getImageEvent(), null);
+
+				    }
+				    else
+				    {
+				    	im = null;
+				    }
+				    ImageView image = new ImageView();
+				    image.setImage(im);
+				    image.setFitHeight(40);
+				    image.setFitWidth(40);
 				    // if the event is a duration event
 				    if(event.isDuration())
 					{
@@ -438,7 +453,6 @@ public class Timeline
 								"Start date event : " + StartDate + "\n" + 
 								"End date event : " + event.getEndDatePickerEvent().getValue().toString() + "\n" + 
 								"Description : " + event.getDescEvent() );
-
 					}
 					else
 					{
@@ -451,13 +465,14 @@ public class Timeline
 			        Button close = new Button("Close");
 			        Button delete = new Button("Delete");
 			        Button modify = new Button("Modify");
-
-				    vbox.getChildren().add(text);
-				  
-				    vbox.getChildren().addAll(close,delete,modify);
-
+				    hbox.getChildren().addAll(close,delete,modify);
+				    GridPane gp = new GridPane();
+				    gp.add(image, 0, 0);
+				    gp.add(text, 0, 1);
+				    gp.add(hbox,0, 2);
+				    Scene scene = new Scene(gp, 400, 400);
+				    stage.setScene(scene);
 				    stage.show();
-				    
 				    // Listener for the close button
 				    close.setOnAction(new EventHandler<ActionEvent>()
 				    {
@@ -486,9 +501,11 @@ public class Timeline
 							stage.close();
 						}
 					});
+				    
 				}
 	    	 });
         }	
+
 	}
 	
 	/**
@@ -497,6 +514,7 @@ public class Timeline
 	 * @param m
 	 * @return month (string)
 	 */
+	
 	public String chooseMonth(int m)
 	{
 		String month = "" ;
@@ -604,7 +622,7 @@ public class Timeline
 	                public void updateItem(LocalDate item, boolean empty) 
 	                {
 	                    super.updateItem(item, empty);
-	                    if (item.isBefore(startDateEvent.getValue().plusDays(0))) 
+	                    if (item.isBefore(startDate.getValue().plusDays(0))) 
 	                    {
 	                    	setDisable(true);
 	                        setStyle("-fx-background-color: #ffc0cb;");
@@ -614,7 +632,7 @@ public class Timeline
 	                    	setDisable(true);
 	                        setStyle("-fx-background-color: #ffc0cb;");
 	                    }
-	                    long days = ChronoUnit.DAYS.between(startDateEvent.getValue(), item);
+	                    long days = ChronoUnit.DAYS.between(startDate.getValue(), item);
 	
 	                    setTooltip(new Tooltip("You're choose " + days + " days"));
 	                }
@@ -680,7 +698,6 @@ public class Timeline
 	    GP.add(submit, 1, 6 );
 
 	    stage.show();
-
 	    // listener when cliking on addImage
 	    addImage.setOnAction(new EventHandler<ActionEvent>() 
 	    {
@@ -696,13 +713,21 @@ public class Timeline
 	            fileChooser.getExtensionFilters()
 	                    .addAll( extFilterjpg, extFilterpng);
 				File file = fileChooser.showOpenDialog(null);
-	                       
-	            try {
-	                BufferedImage bufferedImage = ImageIO.read(file);
-	                im = SwingFXUtils.toFXImage(bufferedImage, null);
-	            } catch (IOException e) {
-	            	e.getStackTrace();
+	            if(file != null)   
+	            {
+	            	try {
+		                bufferedImage = ImageIO.read(file);
+		                e.setImageEvent(bufferedImage);
+		                e.setImageType(file.getCanonicalPath().toLowerCase());		                
+		            } catch (IOException e) {
+		            	e.getStackTrace();
+		            }
 	            }
+	            else
+	            {
+	            	bufferedImage = null;
+	            }
+	            
 			}
 
 	    	
@@ -744,32 +769,35 @@ public class Timeline
     						}
     						else
     						{
+    			            	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
+    							// create the new Event
+    			            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration,e.getImageEvent(),e.getImageType()); 
     			            	// delete the previous event 
     							deleteEvent(e);
-    			            	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
-    			            	// create the new Event
-    			            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration);    			            	addEvent(event);
+    			            	addEvent(event);
     			            	stage.close();
     						}
     					}
     					else
     					{
-    						// delete the previous event
-    						deleteEvent(e);
-    		            	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
-    		            	// create the new Event
-    		            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration);    		            	addEvent(event);
-    		            	stage.close();
+    						boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
+							// create the new Event
+			            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration,e.getImageEvent(),e.getImageType()); 
+			            	// delete the previous event 
+							deleteEvent(e);
+			            	addEvent(event);
+			            	stage.close();
     					}
     				}
     				else
     				{
-    					// delete the previous event
-    					deleteEvent(e);
-    	            	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
-    	            	// create the new Event
-    	            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration);    	            	addEvent(event);
-    	            	stage.close();
+    					boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
+						// create the new Event
+		            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration,e.getImageEvent(),e.getImageType()); 
+		            	// delete the previous event 
+						deleteEvent(e);
+		            	addEvent(event);
+		            	stage.close();
     				}
             	}	
             	else
