@@ -13,9 +13,9 @@
             <MenuButton fx:id="Timeline" layoutX="24.0" layoutY="24.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="118.0" text="Timeline">
               <items>
                 <MenuItem fx:id="AddTimeline" mnemonicParsing="false" onAction="#appearFormTimeline" text="Add Timeline" />
-                <MenuItem fx:id="LoadTimeline" mnemonicParsing="false" text="Load Timelines" />
-                <MenuItem fx:id="SaveTimeline" mnemonicParsing="false" text="Save Timelines" />
-              </items>
+                <MenuItem  mnemonicParsing="false" onAction="#loadTimelines" text="Load Timelines" />
+                <MenuItem  mnemonicParsing="false" onAction="#saveTimelines" text="Save Timelines" />
+             </items>
             </MenuButton>
          </children>
       </AnchorPane>
