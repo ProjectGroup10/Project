@@ -1,9 +1,14 @@
 package application;
 
-import java.util.ArrayList;
+import org.json.simple.JSONArray;
+
 import javafx.scene.control.DatePicker;
 
-
+/**
+ * @role This class represent the Timeline itself
+ * @author Meng Li, Frapper Colin
+ * @date : 04/25/2017
+ */
 public class Timeline 
 {
 
@@ -11,8 +16,6 @@ public class Timeline
 	private String title ;
 	private DatePicker startDate ;
 	private DatePicker endDate ;
-	private ArrayList<Event> listEvent ;
-
 
 	public Timeline (String title, DatePicker startTime, DatePicker endTime)
 	{
@@ -20,98 +23,61 @@ public class Timeline
 		this.title = title ;
 		this.startDate = startTime ;
 		this.endDate = endTime ;
-		this.listEvent = new ArrayList<Event>() ;
 	}
-
+	/**
+	 * Getter 
+	 * @return id
+	 */
 	public int getId() {
 		return id;
 	}
-
+	/**
+	 * setter
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	/**
+	 * Getter 
+	 * @return title
+	 */
 	public String getTitle() {
 		return title;
 	}
-
+	/**
+	 * setter
+	 * @param title
+	 */
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
+	/**
+	 * Getter 
+	 * @return startDate
+	 */
 	public DatePicker getStartTime() {
 		return startDate;
 	}
-
+	/**
+	 * setter
+	 * @param startTime
+	 */
 	public void setStartTime(DatePicker startTime) {
 		this.startDate = startTime;
 	}
-
+	/**
+	 * Getter 
+	 * @return endDate
+	 */
 	public DatePicker getEndTime() {
 		return endDate;
 	}
-
+	/**
+	 * setter
+	 * @param endTime
+	 */
 	public void setEndTime(DatePicker endTime) {
 		this.endDate = endTime;
-	}
-
-	public ArrayList<Event> getListEvent() {
-		return listEvent;
-	}
-
-	public void setListEvent(ArrayList<Event> listEvent) {
-		this.listEvent = listEvent;
-	}
-	
-		
-	public void addTimeline(Event e)
-	{
-		if(validateTimeEvent(e))
-		{
-			listEvent.add(e);
-		}
-		else
-		{
-			System.out.println("Error about the date");
-		}
-	}
-	
-	public void deleteEvent(Event e)
-	{
-		listEvent.remove(e);
-	}
-	
-	public void saveEvent()
-	{
-		// FILE READER 
-	}
-	
-	public boolean validateTimeEvent(Event e)
-	{
-		if (e.getStartTime().compareTo(e.getEndTime()) < 0 )
-		{
-			return true ;
-		}
-		else
-			return false ;
-	}
-	
-	public void modifyEvent(Event e)
-	{
-		for (Event event : listEvent) 
-		{	   
-		    if(event.getId() == e.getId())
-		    {
-		    	event.setTitle(e.getTitle());
-		    	event.setDescription(e.getDescription());
-		    	event.setStartTime(e.getStartTime());
-		    	if(e.isDuration())
-		    	{
-		    		event.setDuration(e.isDuration());
-		    		event.setEndTime(e.getEndTime());
-		    	}
-		    	
-		    }
-		}
 	}
 }
