@@ -15,6 +15,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -28,6 +29,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -36,6 +38,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -62,6 +65,9 @@ public class Timeline
 	// LineChart who represents the "graphic timeline"
     private LineChart<String,Number> lineChart ;
     private boolean durationEvent = false;
+    private VBox v;
+    private HBox hbox;
+    private ScrollPane sp;
 
 
 
@@ -438,22 +444,31 @@ public class Timeline
 	        event.getSeries().setName(event.getTitleEvent());
 	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay));
 	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXend, endDay));
-		    // tooltip permit to display something when just passing the mouse over the event
-	        Tooltip tool = new Tooltip("Add something there");
-		    Tooltip.install( event.getSeries().getNode(), tool);
 		}
 		else // it's a non duration event
 		{
 			 event.getSeries().setName(event.getTitleEvent());
 			 event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay));
-			 // tooltip permit to display something when just passing the mouse over the event
-			 Tooltip tool = new Tooltip("Add something there");
-		     Tooltip.install( event.getSeries().getNode(), tool);
 		}
-		
+		// display a new window with the information of the event 
+	    Stage stage = new Stage();
+        stage.setTitle("Information event");
 		// add the series to the lineChart
-        lineChart.getData().add( event.getSeries());	
-        
+        lineChart.getData().add( event.getSeries());
+        sp = new ScrollPane();
+        hbox = new HBox();
+	    // Create three different buttons
+        Button close = new Button("Close");
+        Button delete = new Button("Delete");
+        Button modify = new Button("Modify");
+	    hbox.getChildren().addAll(close,delete,modify);
+	    hbox.setPadding(new Insets(10,10,10,10));
+	    hbox.setSpacing(10);
+	    hbox.setAlignment(Pos.CENTER);
+	    v = new VBox();
+        v.getChildren().addAll(sp,hbox);
+	    Scene scene = new Scene(v, 300, 200);
+
         // for each data for a series
         for (XYChart.Data<String, Number> ss :  event.getSeries().getData()) 
         {
@@ -462,10 +477,7 @@ public class Timeline
 	    	{
         		public void handle(MouseEvent e) 
 				{
-        			// display a new window with the information of the event 
-					Stage stage = new Stage();
-			        stage.setTitle("Information event");
-				    HBox hbox = new HBox();
+					
 				    Label text = null;
 				    Image im;
 				    if(event.getImageEvent() != null)
@@ -496,16 +508,15 @@ public class Timeline
 								"Description : " + event.getDescEvent() );
 					}
 
-				    // Create three different buttons
-			        Button close = new Button("Close");
-			        Button delete = new Button("Delete");
-			        Button modify = new Button("Modify");
-				    hbox.getChildren().addAll(close,delete,modify);
 				    GridPane gp = new GridPane();
+				    gp.setPadding(new Insets(10,10,10,10));
+					gp.setVgap(5);
+					gp.setHgap(10);
 				    gp.add(image, 0, 0);
-				    gp.add(text, 1, 0);
-				    gp.add(hbox,0, 1);
-				    Scene scene = new Scene(gp, 400, 150);
+				    gp.add(text, 0, 1);
+				    sp.setContent(gp);
+				    sp.setPrefSize(300, 150);
+				    
 				    stage.setScene(scene);
 				    stage.show();
 				    // Listener for the close button
@@ -550,9 +561,11 @@ public class Timeline
 				    
 				}
 	    	 });
+        	
         }	
 
 	}
+	
 	
 	/**
 	 * @role method who "transform" the integer passed in parameters into the corresponding 
@@ -560,7 +573,14 @@ public class Timeline
 	 * @param m
 	 * @return month (string)
 	 */
-	
+	public VBox getVbox()
+	{
+		return v;
+	}
+	public HBox getHbox()
+	{
+		return hbox;
+	}
 	public String chooseMonth(int m)
 	{
 		String month = "" ;
@@ -602,7 +622,7 @@ public class Timeline
 	 */
 	public boolean isDuration(DatePicker sd, DatePicker ed)
 	{
-		if (sd.getValue() == ed.getValue()) 
+		if (sd.getValue().equals(ed.getValue()) ) 
 			return false;
 		else
 			return true ;

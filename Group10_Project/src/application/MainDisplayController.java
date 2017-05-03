@@ -98,6 +98,8 @@ public class MainDisplayController {
 	        	Event newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent,EndDateNewEvent,duration,image,imagetype);
 	        	// call the addEvent method from the class Timeline
 	        	t.addEvent(newEvent);
+				t.getVbox().getChildren().remove(t.getHbox());
+
 	        }   
          }
 	}
