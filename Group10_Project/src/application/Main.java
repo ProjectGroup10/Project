@@ -15,11 +15,11 @@ public class Main extends Application
 {
 	public void start(Stage primaryStage) 
 	{
+
 		try 
 		{
-			// load the fxml file (start page)
-			Parent root1 = FXMLLoader.load(getClass().getResource("MainTemplate.fxml"));
-			Scene scene = new Scene(root1, 1200,800);
+			Parent root1 = FXMLLoader.load(getClass().getResource("/application/MainMenu.fxml"));
+			Scene scene = new Scene(root1, 500,400);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();

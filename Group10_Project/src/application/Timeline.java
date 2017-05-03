@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import javax.imageio.ImageIO;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -23,6 +23,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -46,6 +48,7 @@ import javafx.util.Callback;
  * @author Meng Li, Frapper Colin
  * @date : 04/25/2017
  */
+
 public class Timeline 
 {
 	private int id = 0 ; 
@@ -58,6 +61,8 @@ public class Timeline
 	private BufferedImage bufferedImage;
 	// LineChart who represents the "graphic timeline"
     private LineChart<String,Number> lineChart ;
+    private boolean durationEvent = false;
+
 
 
 	public Timeline (String title, DatePicker startTime, DatePicker endTime)
@@ -230,7 +235,9 @@ public class Timeline
 		
 		Scene scene = new Scene(GP,350,400);
 		stage.setScene(scene);
-		
+		CheckBox duration = new CheckBox();
+	    duration.setText("event with duration ?");
+	   
 		TextField nameEvent = new TextField();
 	    DatePicker startDatePickerEvent = new DatePicker();
 	    DatePicker endDatePickerEvent = new DatePicker();
@@ -243,26 +250,46 @@ public class Timeline
         
 	    GP.add(new Text("StartDate:"), 0, 1 );
 	    GP.add(startDatePickerEvent, 1, 1 );
-
-	    endDatePickerEvent.setValue(LocalDate.now());
+	    startDatePickerEvent.setValue(LocalDate.now());
+		endDatePickerEvent.setValue(startDatePickerEvent.getValue());
 	    // method to handle the fact that the end date should be after the start date
-        setDatePicker(startDatePickerEvent,endDatePickerEvent);
-
-		GP.add(new Text("EndDate"), 0, 2 );
-	    GP.add(endDatePickerEvent, 1, 2 );
-	    
-		GP.add(new Text("Description:"), 0, 3);
-		GP.add(DescField, 1, 3);
+        Text enddate = new Text("EndDate");
+	    setDatePicker(startDatePickerEvent,endDatePickerEvent);
+	    GP.add(duration, 1, 2 );
+	    duration.setOnAction(new EventHandler<ActionEvent>()
+	    {
+	    	public void handle(ActionEvent arg0) 
+			{
+	    		if(duration.isSelected())
+	    		{
+	    			GP.add(enddate, 0, 3 );
+	    		    GP.add(endDatePickerEvent, 1, 3 );
+	    		    durationEvent = true;
+	    		}
+	    		else
+	    		{
+	    		    durationEvent = false;
+	    			endDatePickerEvent.setValue(startDatePickerEvent.getValue());
+	    			GP.getChildren().removeAll(enddate,endDatePickerEvent);
+	    		
+	    		}
+	    		
+			}
+		});
 		
-		GP.add(new Text("Add Image:"), 0, 4);
-		GP.add(addImage, 1, 4);
+	    
+		GP.add(new Text("Description:"), 0, 4);
+		GP.add(DescField, 1, 4);
+		
+		GP.add(new Text("Add Image:"), 0, 5);
+		GP.add(addImage, 1, 5);
 		
 		submit.setPrefSize(150, 30);
 		Label label = new Label();
 		label.setFont(new Font("Sans Serif",18));
 		label.setTextFill(Color.RED);
-		GP.add(label, 1, 5);
-		GP.add(submit,1,6);
+		GP.add(label, 1, 6);
+		GP.add(submit,1,7);
 		stage.show();
 
 		
@@ -303,12 +330,20 @@ public class Timeline
 	    {
             @Override
             public void handle(ActionEvent e) 
-            {
-            	// call the method isDuration to determine if the event is an duration event 
-            	// or an non duratio event
-            	boolean duration = isDuration(startDatePickerEvent,endDatePickerEvent);
+            {            	
             	// creation of the envent 
-            	Event event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,duration,bufferedImage,imageType);
+            	Event event;
+            	if(!durationEvent)
+            	{
+	    			endDatePickerEvent.setValue(startDatePickerEvent.getValue());
+                	event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent, durationEvent,bufferedImage,imageType);
+
+            	}
+            	else
+            	{
+                	event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent, durationEvent,bufferedImage,imageType);
+
+            	}
             	if(nameEvent.getText() != null && !nameEvent.getText().isEmpty() )
 				{
 					if(event.getStartDatePickerEvent().getValue().getYear() > event.getEndDatePickerEvent().getValue().getYear())
@@ -468,9 +503,9 @@ public class Timeline
 				    hbox.getChildren().addAll(close,delete,modify);
 				    GridPane gp = new GridPane();
 				    gp.add(image, 0, 0);
-				    gp.add(text, 0, 1);
-				    gp.add(hbox,0, 2);
-				    Scene scene = new Scene(gp, 400, 400);
+				    gp.add(text, 1, 0);
+				    gp.add(hbox,0, 1);
+				    Scene scene = new Scene(gp, 400, 150);
 				    stage.setScene(scene);
 				    stage.show();
 				    // Listener for the close button
@@ -487,8 +522,19 @@ public class Timeline
 				    {
 						public void handle(ActionEvent e) 
 						{
+							Alert alert = new Alert(AlertType.CONFIRMATION);
+			            	alert.setTitle("Confirmation Dialog");
+			            	alert.setContentText("Are you sure?");
+
+			            	Optional<ButtonType> result = alert.showAndWait();
+			            	if (result.get() == ButtonType.OK){
 					        deleteEvent(event);
 					        stage.close();
+			            	}
+			            	else
+			            	{
+			            		//
+			            	}
 						}
 				    });
 				    
@@ -581,11 +627,7 @@ public class Timeline
 	 * @param endDateTimeline
 	 */
 	public void setDatePicker(DatePicker startDateEvent, DatePicker endDateEvent)
-	{
-		startDateEvent.setValue(startDate.getValue());
-		// To discuss
-		endDateEvent.setValue(startDate.getValue());
-		
+	{		
 		final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() 
 		{      
 	        public DateCell call(final DatePicker datePicker) 
@@ -696,8 +738,8 @@ public class Timeline
 	    GP.add(addImage, 1, 4 );
 		GP.add(label, 1, 5);
 	    GP.add(submit, 1, 6 );
-
 	    stage.show();
+	    
 	    // listener when cliking on addImage
 	    addImage.setOnAction(new EventHandler<ActionEvent>() 
 	    {

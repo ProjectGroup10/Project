@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Optional;
+
 import javax.imageio.ImageIO;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
@@ -26,6 +28,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -57,7 +60,7 @@ public class MainController  {
 	// List of the timelines
 	public ArrayList<Timeline> TimelineCollection  =  new ArrayList<Timeline>();
 	// VBox who contains all the timelines
-	@FXML VBox vBoxModules ;
+	@FXML VBox vBoxModules;
 	
 	/**
 	 * @role method called when clicking on the button add timeline, create a new window to 
@@ -68,8 +71,10 @@ public class MainController  {
 		Stage stage = new Stage();
         stage.setTitle("Form timeline"); // set the title of the window
         GridPane GP = new GridPane();
-	    Scene scene = new Scene(GP, 300, 180);
+	    Scene scene = new Scene(GP, 320, 180);
 	    stage.setScene(scene);
+	    String  style= getClass().getResource("application.css").toExternalForm(); //link to css file
+	    scene.getStylesheets().add(style);
 	    GP.setPadding(new Insets(10,10,10,10));
 		GP.setVgap(5);
 		GP.setHgap(10);
@@ -195,7 +200,10 @@ public class MainController  {
         MenuItem DeleteTimeLine = new MenuItem("Delete Timeline");
         MenuItem AddEvent = new MenuItem("Add Event");
 
-        MenuButton menuButton = new MenuButton("Options", null, DeleteTimeLine, AddEvent);
+        MenuButton menuButton = new MenuButton("Options");
+        //
+        //
+        menuButton.getItems().addAll(DeleteTimeLine, AddEvent);
         
         vBoxModules.getChildren().add(menuButton);
 
@@ -224,12 +232,22 @@ public class MainController  {
 	    {
             public void handle(ActionEvent e) 
             {
-            	// Remove the menu button corresponding to the timeline
-            	vBoxModules.getChildren().remove(menuButton);
-            	// Remove the HBox who contains the timeline
-            	vBoxModules.getChildren().remove(h);	
-            	// Timeline removed from the list TimelineCollection
-            	TimelineCollection.remove(t);
+            	Alert alert = new Alert(AlertType.CONFIRMATION);
+            	alert.setTitle("Confirmation Dialog");
+            	alert.setContentText("Are you sure?");
+
+            	Optional<ButtonType> result = alert.showAndWait();
+            	if (result.get() == ButtonType.OK){
+            		// Remove the menu button corresponding to the timeline
+                	vBoxModules.getChildren().remove(menuButton);
+                	// Remove the HBox who contains the timeline
+                	vBoxModules.getChildren().remove(h);	
+                	// Timeline removed from the list TimelineCollection
+                	TimelineCollection.remove(t);
+            	} else {
+            	    // ... user chose CANCEL or closed the dialog
+            	}
+            	
             }
 	    });
 	}
@@ -311,11 +329,25 @@ public class MainController  {
 
 		// JFileChoose use to permit to the user to save the timelines in his own file 
 		FileChooser fileChooser = new FileChooser();
-		File file = fileChooser.showOpenDialog(null);
-	    FileWriter fw = new FileWriter(file); 
-	    fw.write(allTimelines.toString());
-	    fw.flush();
-	    fw.close();
+		fileChooser.setTitle("Save file or replace exists file");
+		FileChooser.ExtensionFilter extFiltertxt = 
+                new FileChooser.ExtensionFilter("txt files (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter extFilterjson = 
+                new FileChooser.ExtensionFilter("json files (*.json)", "*.json");
+        fileChooser.getExtensionFilters()
+                .addAll( extFiltertxt, extFilterjson);
+		File file = fileChooser.showSaveDialog(null);
+
+	    if(file != null)
+	    {
+		    FileWriter fw = new FileWriter(file); 
+	    	fw.write(allTimelines.toString());
+	 	    fw.flush();
+	 	    fw.close();
+	    }
+	    else
+	    {
+	    }
 	}
 	
 		
@@ -333,6 +365,12 @@ public class MainController  {
         FileReader reader = null;
         // FileChooser used to choose the which file you want to load
         FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFiltertxt = 
+                new FileChooser.ExtensionFilter("txt files (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter extFilterjson = 
+                new FileChooser.ExtensionFilter("json files (*.json)", "*.json");
+        fileChooser.getExtensionFilters()
+                .addAll( extFiltertxt, extFilterjson);
 		File file = fileChooser.showOpenDialog(null);
 	    reader=new FileReader(file);  
 	    // Parse the reader 
