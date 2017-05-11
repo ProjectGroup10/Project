@@ -1,1 +1,65 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.background {
+    -fx-background-color: #FCFFF5;
+}
+
+.button{
+	-fx-background-color: #008CBA;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20 10 20;
+}
+
+.menu-button {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #008CBA;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 10 20 10 20;
+}
+
+.button:hover {
+    -fx-background-color: #FFFFFF;
+    -fx-color: white;
+    -fx-text-fill: #008CBA;
+}
+
+.menu-button:hover {
+    -fx-background-color: #FFFFFF;
+    -fx-color: white;
+    -fx-text-fill: #008CBA;
+}
+
+.text-field:focused {
+    -fx-background-color: #008CBA , white , white;
+    -fx-background-insets: -1 -1 -1 -1, 0 0 0 0, 0 0 0 0;
+}
+
+.menu-button .label{
+	-fx-text-fill: #FFFFFF;
+}
+
+.menu-button:hover .label{
+	-fx-text-fill: #008CBA;
+}
+
+.label
+{
+	-fx-font-weight: bold;
+	-fx-font-size: 1pc;
+}
+
+#menuLeft{
+	-fx-spacing: .5pc;
+	-fx-padding: 1pc;
+}
+
+#mainScrollPane{
+	-fx-padding: 1pc;
+}

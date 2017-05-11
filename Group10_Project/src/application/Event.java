@@ -1,6 +1,8 @@
 package application;
 
 
+import java.awt.image.BufferedImage;
+
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.DatePicker;
 import javafx.scene.image.Image;
@@ -12,38 +14,65 @@ import javafx.scene.image.Image;
  */
 public  class Event {
 
+	/*
 	private int id = 0 ;
 	private String TitleEvent;
 	private String DescEvent;
 	private DatePicker StartDatePickerEvent;
 	private DatePicker EndDatePickerEvent;
-	private Image imageEvent;
+	private BufferedImage imageEvent;
+	private String imageType ;
 	private boolean duration ; 
+	private XYChart.Series<String, Number> series ;*/
+	
+	private int id = 0 ;
+	private String TitleEvent;
+	private String DescEvent;
+	private DatePicker StartDatePickerEvent;
+	private DatePicker EndDatePickerEvent;
+	private BufferedImage imageEvent;
+	private boolean duration ; 
+	private String imageType;
 	private XYChart.Series<String, Number> series ;
 
-	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent, DatePicker EndDatePickerEvent, boolean duration/*, Image imageEvent*/)
+	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent, DatePicker EndDatePickerEvent, boolean duration, BufferedImage imageEvent,String imagetype)
 	{
+	
 		this.id = id++ ;
 		this.TitleEvent = TitleEvent ;
 		this.DescEvent = DescEvent;
 		this.StartDatePickerEvent = StartDatePickerEvent ;
 		this.duration = duration ;
 		this.EndDatePickerEvent = EndDatePickerEvent ;
+		this.imageEvent = imageEvent;
 		// initialize the series when creating an event
 		this.series = new XYChart.Series<String, Number>();
-		//this.imageEvent = imageEvent;
+		this.imageType = imagetype;
+
+
 	}
-	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent,  boolean duration/*, Image imageEvent*/)
+	
+	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent,  boolean duration, BufferedImage imageEvent,String imagetype)
 	{
 		this.id = id++ ;
 		this.TitleEvent = TitleEvent ;
 		this.DescEvent = DescEvent;
 		this.StartDatePickerEvent = StartDatePickerEvent ;
 		this.duration = duration ;
-		//this.EndDatePickerEvent = EndDatePickerEvent ;
+		this.imageEvent = imageEvent;
 		// initialize the series when creating an event
 		this.series = new XYChart.Series<String, Number>();
-		//this.imageEvent = imageEvent;
+		this.imageType = imagetype;
+
+		
+	}
+
+	public String getImageType() {
+		return imageType;
+	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
 	}
 
 	/**
@@ -161,7 +190,7 @@ public  class Event {
 	 * Getter
 	 * @return series
 	 */
-	public Image getImageEvent() {
+	public BufferedImage getImageEvent() {
 		return imageEvent;
 	}
 
@@ -169,7 +198,7 @@ public  class Event {
 	 * Setter
 	 * @param imageEvent
 	 */
-	public void setImageEvent(Image imageEvent) {
+	public void setImageEvent(BufferedImage imageEvent) {
 		this.imageEvent = imageEvent;
 	}
 	
