@@ -16,6 +16,7 @@
       <children>
             <ImageView fx:id="iv1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
+<<<<<<< HEAD
                   <Image url="image/image.png" 
                   backgroundLoading="true" />
                </image>
@@ -26,6 +27,16 @@
             	<Button mnemonicParsing="false" onAction="#goToDisplayMode" text="Display Mode" />
           	</children>
         	</HBox>
+=======
+                  <Image url="@image/image.png" />
+               </image></ImageView>
+        <HBox alignment="CENTER" prefHeight="57.0" prefWidth="281.0" spacing="20.0">
+          <children>
+            <Button mnemonicParsing="false" onAction="#goToCreateMode" text="Create Mode" />
+            <Button mnemonicParsing="false" onAction="#goToDisplayMode" text="Display Mode" />
+          </children>
+        </HBox>
+>>>>>>> 3cd75d1b9af9a013c4eee48992abda74c5b6f3c0
       </children>
       <padding>
         <Insets />
