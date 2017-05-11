@@ -54,7 +54,6 @@ import javafx.util.Callback;
 
 public class Timeline 
 {
-	private int id = 0 ; 
 	private String title ; 
 	private String imageType;
 	private DatePicker startDate ; 
@@ -65,16 +64,12 @@ public class Timeline
 	// LineChart who represents the "graphic timeline"
     private LineChart<String,Number> lineChart ;
     private boolean durationEvent = false;
-    private VBox v;
-    private HBox hbox;
-    private ScrollPane sp;
 
 
 
 	public Timeline (String title, DatePicker startTime, DatePicker endTime)
 	{
 		//autoincrement id when creating a timeline
-		this.id = id++ ;
 		this.title = title ;
 		this.startDate = startTime ;
 		this.endDate = endTime ;
@@ -136,25 +131,10 @@ public class Timeline
 		this.lineChart = lineChart;
 	}
 	
+	
 	/**
 	 * Getter 
-	 * @return endDate
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * setter
-	 * @param id
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
-	 * Getter 
-	 * @return endDate
+	 * @return title
 	 */
 	public String getTitle() {
 		return title;
@@ -190,11 +170,9 @@ public class Timeline
 	private void initLineChart() 
 	{
 		String startDateTimeline = startDate.getValue().toString();
-    	String[] splitStartDateTimeline = startDateTimeline.split("-");
-    	int startYear = Integer.parseInt(splitStartDateTimeline[0]);
+    	int startYear = startDate.getValue().getYear();
     	String endDateTimeline = endDate.getValue().toString();
-    	String[] splitEndDateTimeline = endDateTimeline.split("-");
-    	int endYear = Integer.parseInt(splitEndDateTimeline[0]);
+    	int endYear = endDate.getValue().getYear();
     	
     	// Used to define the size of the line chart
     	int diffyear = endYear-startYear ;
@@ -204,7 +182,7 @@ public class Timeline
     	int date ;
     	for (int i = 0; i <= diffyear ; i++)
     	{
-    		date = Integer.parseInt(splitStartDateTimeline[0])+i ; 
+    		date = startDate.getValue().getYear()+i ; 
         	months.addAll("Jan "+ Integer.toString(date),"Feb "+ Integer.toString(date),"Mar "+ Integer.toString(date)
         	,"Apr "+ Integer.toString(date),"May "+ Integer.toString(date),"Jun "+ Integer.toString(date),
         	"Jul "+ Integer.toString(date),"Aug "+ Integer.toString(date),"Sep "+ Integer.toString(date),
@@ -256,7 +234,7 @@ public class Timeline
         
 	    GP.add(new Text("StartDate:"), 0, 1 );
 	    GP.add(startDatePickerEvent, 1, 1 );
-	    startDatePickerEvent.setValue(LocalDate.now());
+	    startDatePickerEvent.setValue(startDate.getValue());
 		endDatePickerEvent.setValue(startDatePickerEvent.getValue());
 	    // method to handle the fact that the end date should be after the start date
         Text enddate = new Text("EndDate");
@@ -379,22 +357,19 @@ public class Timeline
 							}
 							else
 							{
-								
-				            	addEvent(event);
+								addEvent(event);
 				            	stage.close();
 							}
 						}
 						else
 						{
-			            	addEvent(event);
+							addEvent(event);
 			            	stage.close();
 						}
 					}
 					else
 					{
-						
-		            	
-		            	addEvent(event);
+						addEvent(event);
 		            	stage.close();
 					}
 				}
@@ -419,11 +394,9 @@ public class Timeline
     	listEvent.add(event);
     	
     	String StartDate = event.getStartDatePickerEvent().getValue().toString();
-		String EndDate = "" ;
-    	String[] splitStartDate = StartDate.split("-");
-    	String startYear = splitStartDate[0];
-    	int startMonth = Integer.parseInt(splitStartDate[1]);
-    	int startDay = Integer.parseInt(splitStartDate[2]);
+    	int startYear = event.getStartDatePickerEvent().getValue().getYear();
+    	int startMonth = event.getStartDatePickerEvent().getValue().getMonthValue();
+    	int startDay = event.getStartDatePickerEvent().getValue().getDayOfMonth();
     	// call the method chooseMonth depending on which month is selected
     	String monthStart = chooseMonth(startMonth); 
     	String axisXstart = monthStart + startYear ;
@@ -431,12 +404,10 @@ public class Timeline
     	// if it's a duration then add an endDate
 		if(event.isDuration())
 		{
-			EndDate = event.getEndDatePickerEvent().getValue().toString();
-	    	String[] splitEndDate = EndDate.split("-");
-	    	int endDay = Integer.parseInt(splitEndDate[2]);
-	    	int endMonth = Integer.parseInt(splitEndDate[1]);
+	    	int endDay = event.getEndDatePickerEvent().getValue().getDayOfMonth();
+	    	int endMonth = event.getEndDatePickerEvent().getValue().getMonthValue();
 
-	    	String endYear = splitEndDate[0];
+	    	int endYear = event.getEndDatePickerEvent().getValue().getYear();
 			String monthEnd = chooseMonth(endMonth); 
 	    	String axisXend = monthEnd + endYear ;
 
@@ -447,27 +418,18 @@ public class Timeline
 		}
 		else // it's a non duration event
 		{
-			 event.getSeries().setName(event.getTitleEvent());
-			 event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay));
+			event.getSeries().setName(event.getTitleEvent());
+    		event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay));
+    		
 		}
-		// display a new window with the information of the event 
-	    Stage stage = new Stage();
-        stage.setTitle("Information event");
+		
 		// add the series to the lineChart
         lineChart.getData().add( event.getSeries());
-        sp = new ScrollPane();
-        hbox = new HBox();
+        
 	    // Create three different buttons
         Button close = new Button("Close");
         Button delete = new Button("Delete");
-        Button modify = new Button("Modify");
-	    hbox.getChildren().addAll(close,delete,modify);
-	    hbox.setPadding(new Insets(10,10,10,10));
-	    hbox.setSpacing(10);
-	    hbox.setAlignment(Pos.CENTER);
-	    v = new VBox();
-        v.getChildren().addAll(sp,hbox);
-	    Scene scene = new Scene(v, 300, 200);
+        Button modify = new Button("Modify");        
 
         // for each data for a series
         for (XYChart.Data<String, Number> ss :  event.getSeries().getData()) 
@@ -477,7 +439,7 @@ public class Timeline
 	    	{
         		public void handle(MouseEvent e) 
 				{
-					
+        			
 				    Label text = null;
 				    Image im;
 				    if(event.getImageEvent() != null)
@@ -507,8 +469,16 @@ public class Timeline
 								"Start date event : " + StartDate + "\n" + 
 								"Description : " + event.getDescEvent() );
 					}
-
+				 // display a new window with the information of the event 
+				    Stage stage = new Stage();
+			        stage.setTitle("Information event");
+			        HBox hbox = new HBox();
+			        hbox.getChildren().addAll(close,delete,modify);
+				    hbox.setPadding(new Insets(10,10,10,10));
+				    hbox.setSpacing(10);
+				    hbox.setAlignment(Pos.CENTER);
 				    GridPane gp = new GridPane();
+				    ScrollPane sp = new ScrollPane();
 				    gp.setPadding(new Insets(10,10,10,10));
 					gp.setVgap(5);
 					gp.setHgap(10);
@@ -516,7 +486,10 @@ public class Timeline
 				    gp.add(text, 0, 1);
 				    sp.setContent(gp);
 				    sp.setPrefSize(300, 150);
-				    
+				    VBox v = new VBox();
+			        v.getChildren().addAll(sp,hbox);
+
+				    Scene scene = new Scene(v, 300, 200);
 				    stage.setScene(scene);
 				    stage.show();
 				    // Listener for the close button
@@ -561,9 +534,7 @@ public class Timeline
 				    
 				}
 	    	 });
-        	
         }	
-
 	}
 	
 	
@@ -573,14 +544,7 @@ public class Timeline
 	 * @param m
 	 * @return month (string)
 	 */
-	public VBox getVbox()
-	{
-		return v;
-	}
-	public HBox getHbox()
-	{
-		return hbox;
-	}
+	
 	public String chooseMonth(int m)
 	{
 		String month = "" ;

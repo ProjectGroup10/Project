@@ -83,7 +83,7 @@ public class MainController  {
 	    startDateTimeline.setValue(LocalDate.now());
 
 	    DatePicker endDateTimeline = new DatePicker();
-	    endDateTimeline.setValue(LocalDate.now());
+	    endDateTimeline.setValue(LocalDate.now().plusDays(1));
 
         TextField name = new TextField();
         Button submit = new Button("Submit");
@@ -447,7 +447,7 @@ public class MainController  {
 			        public void updateItem(LocalDate item, boolean empty) 
 			        {
 			            super.updateItem(item, empty);
-			            if (item.isBefore(startDateTimeline.getValue().plusDays(0))) 
+			            if (item.isBefore(startDateTimeline.getValue().plusDays(1))) 
 			            {
 			                    setDisable(true);
 			                    setStyle("-fx-background-color: #ffc0cb;");

@@ -13,9 +13,9 @@
          <left>
             <VBox prefHeight="200.0" prefWidth="180.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#appearFormTimeline" text="Add Timeline" />
-                  <Button mnemonicParsing="false" onAction="#loadTimelines" text="Load Timelines" />
-                  <Button mnemonicParsing="false" onAction="#saveTimelines" text="Save Timelines" />
+                  <Button prefWidth="160.0" mnemonicParsing="false" onAction="#appearFormTimeline" text="Add Timeline" />
+                  <Button prefWidth="160.0" mnemonicParsing="false" onAction="#loadTimelines" text="Load Timelines" />
+                  <Button prefWidth="160.0" mnemonicParsing="false" onAction="#saveTimelines" text="Save Timelines" />
                </children>
             </VBox>
          </left>
