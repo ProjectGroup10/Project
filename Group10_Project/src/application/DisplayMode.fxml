@@ -10,25 +10,25 @@
 
 
 <AnchorPane prefHeight="1000" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="application.MainDisplayController">
-   <children>
-      <BorderPane layoutX="-77.0" layoutY="-127.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <top>
-            <HBox prefHeight="28.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#DisplayTimeline"  text="Load Project" />
-               </children>
-            </HBox>
-         </top>
-         <center>
-            <ScrollPane >
-              <content>
-              		<VBox fx:id="vbox" prefHeight="800.0" prefWidth="800" >
-                  		<children>
-                  		</children>
-              		</VBox>
-          		</content>
-     		</ScrollPane>
-         </center>
-      </BorderPane>
-   </children>
+	<children>
+		<BorderPane layoutX="-77.0" layoutY="-127.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+	      	<top>
+	         	<HBox prefHeight="28.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+	            	<children>
+	               		<Button mnemonicParsing="false" onAction="#DisplayTimeline"  text="Load Project" />
+	            	</children>
+	         	</HBox>
+	      	</top>
+	      	<center>
+	         	<ScrollPane >
+	           		<content>
+	           			<VBox fx:id="vbox" prefHeight="800.0" prefWidth="800" >
+	               			<children>
+	               			</children>
+	           			</VBox>
+	       			</content>
+	  			</ScrollPane>
+	      	</center>
+   		</BorderPane>
+	</children>
 </AnchorPane>

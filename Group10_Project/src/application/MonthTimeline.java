@@ -1,14 +1,11 @@
 package application;
 
-import org.controlsfx.*;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
-import org.controlsfx.control.CheckListView;
 
 
 
 import java.time.LocalDate;
-import javafx.stage.Popup;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -18,8 +15,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
-import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -29,22 +24,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
 public class MonthTimeline extends Timeline
 {
@@ -92,13 +79,15 @@ public class MonthTimeline extends Timeline
         lineChart.setTitle(title + " (" + splitEndDateTimeline[0]+  ")");
         lineChart.setMinHeight(450);
         lineChart.setMinWidth(500);
-        /*String cssLayout = "-fx-border-color: red;\n" +
+        String cssLayout = "-fx-border-color: red;\n" +
                 "-fx-border-insets: 5;\n" +
-                "-fx-border-width: 3;\n" +
-                "-fx-border-style: dashed;\n";
+                "-fx-border-width: 3;\n";
     	
         lineChart.setStyle(cssLayout);
-		*/
+
+
+
+
 	}
 	
 	/**
@@ -131,17 +120,14 @@ public class MonthTimeline extends Timeline
 
 	    	// add the event to the lineChart, using a series from the class event
 	        event.getSeries().setName(event.getTitleEvent());
-	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay/* listEvent.size()*/));
-	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXend, endDay /*listEvent.size()*/));
-		    // tooltip permit to display something when just passing the mouse over the event
-	        Tooltip tool = new Tooltip("Add something there");
-		    Tooltip.install( event.getSeries().getNode(), tool);
+	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay));
+	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXend, endDay));
+	        lineChart.setStyle(".default-color0.chart-series-line { -fx-stroke: #e9967a; }");
 		}
 		else // it's a non duration event
 		{
 			 event.getSeries().setName(event.getTitleEvent());
-			 event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay /*listEvent.size()*/));
-			 // tooltip permit to display something when just passing the mouse over the event
+			 event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay));
 		}
 
 		// add the series to the lineChart
@@ -163,9 +149,7 @@ public class MonthTimeline extends Timeline
 				    String text = null ;
 
 					for(int i = 0 ; i< listEvent.size() ; i++)
-		        	{
-
-						
+		        	{	
 						LocalDate a = event.getStartDatePickerEvent().getValue();
 	        			LocalDate d = a ;
 						if(event.isDuration())
@@ -272,7 +256,11 @@ public class MonthTimeline extends Timeline
 								text.setTextFill(Color.WHITE);
 								
 								
-								vbox.getChildren().addAll(image,text);
+								if(listEvent.get(i).getImageEvent() != null)
+								{
+									vbox.getChildren().add(image);
+								}
+								vbox.getChildren().add(text);
 								vbox.getChildren().addAll(close,modify,delete);
 			        	        vbox.setStyle("-fx-background-color: coral;");
 
@@ -293,7 +281,11 @@ public class MonthTimeline extends Timeline
 										"Description : " + description );
 								
 								text.setTextFill(Color.WHITE);
-								vbox.getChildren().addAll(image,text);
+								if(listEvent.get(i).getImageEvent() != null)
+								{
+									vbox.getChildren().add(image);
+								}
+								vbox.getChildren().add(text);
 								vbox.getChildren().addAll(close,modify,delete);
 			        	        vbox.setStyle("-fx-background-color: coral;");
 

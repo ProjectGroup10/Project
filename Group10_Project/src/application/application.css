@@ -1,5 +1,6 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 
+/* Is it useful ?  */
 .background {
     -fx-background-color: #FCFFF5;
 }
@@ -62,8 +63,4 @@
 
 #mainScrollPane{
 	-fx-padding: 1pc;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 3cd75d1b9af9a013c4eee48992abda74c5b6f3c0

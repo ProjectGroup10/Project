@@ -2,10 +2,6 @@ package application;
 
 
 import java.awt.image.BufferedImage;
-<<<<<<< HEAD
-
-=======
->>>>>>> 3cd75d1b9af9a013c4eee48992abda74c5b6f3c0
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.DatePicker;
 
@@ -50,7 +46,6 @@ public  class Event {
 		// initialize the series when creating an event
 		this.series = new XYChart.Series<String, Number>();
 		this.imageType = imagetype;
-<<<<<<< HEAD
 
 
 	}
@@ -70,15 +65,7 @@ public  class Event {
 		
 	}
 
-	public String getImageType() {
-		return imageType;
-	}
 
-	public void setImageType(String imageType) {
-		this.imageType = imageType;
-=======
->>>>>>> 3cd75d1b9af9a013c4eee48992abda74c5b6f3c0
-	}
 
 	/**
 	 * Getter

@@ -2,7 +2,6 @@ package application;
 	
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,7 +16,6 @@ public class Main extends Application
 	public void start(Stage primaryStage) 
 	{
 
-<<<<<<< HEAD
 		try 
 		{
 			Parent root1 = FXMLLoader.load(getClass().getResource("/application/MainMenu.fxml"));

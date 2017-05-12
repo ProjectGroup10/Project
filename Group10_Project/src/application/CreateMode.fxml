@@ -8,27 +8,27 @@
 
 
 <AnchorPane prefHeight="499.0" prefWidth="1000" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="application.MainController">
-   <children>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <left>
-            <VBox prefHeight="200.0" prefWidth="180.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#appearFormTimeline" text="Add Timeline" />
-                  <Button mnemonicParsing="false" onAction="#loadTimelines" text="Load Timelines" />
-                  <Button mnemonicParsing="false" onAction="#saveTimelines" text="Save Timelines" />
-               </children>
-            </VBox>
-         </left>
-         <center>
-            <ScrollPane >
-          		<content>
-              		<VBox fx:id="vBoxModules" prefHeight="800.0" prefWidth="1000"   >
-                  		<children>
-                  		</children>
-              		</VBox>
-          		</content>
-     		</ScrollPane>
-         </center>
-      </BorderPane>
-   </children>
+	<children>
+   		<BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      		<left>
+         		<VBox prefHeight="200.0" prefWidth="180.0" BorderPane.alignment="CENTER">
+            		<children>
+               			<Button mnemonicParsing="false" onAction="#appearFormTimeline" text="Add Timeline" />
+               			<Button mnemonicParsing="false" onAction="#loadTimelines" text="Load Timelines" />
+           				<Button mnemonicParsing="false" onAction="#saveTimelines" text="Save Timelines" />
+            		</children>
+         		</VBox>
+      		</left>
+      		<center>
+         		<ScrollPane >
+       				<content>
+           				<VBox fx:id="vBoxModules" prefHeight="800.0" prefWidth="1000"   >
+               				<children>
+               				</children>
+           				</VBox>
+       				</content>
+  				</ScrollPane>
+      		</center>
+   		</BorderPane>
+	</children>
 </AnchorPane>

@@ -13,7 +13,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -31,14 +30,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 public class YearTimeline extends Timeline {
 
 	public YearTimeline (String title, DatePicker startTime, DatePicker endTime)
 	{
 		super(title,startTime,endTime);
-		//autoincrement id when creating a timeline
+		//auto increment id when creating a timeline
 		this.id = id++ ;
 		this.listEvent = new ArrayList<Event>() ;
 		// method to initialize the line chart of the corresponding timeline
@@ -218,18 +216,20 @@ public class YearTimeline extends Timeline {
         			for(int i = 0 ; i< listEvent.size() ; i++)
 		        	{
     				    Image im;
+					    ImageView image = new ImageView();
+
     				    if(listEvent.get(i).getImageEvent() != null)
     				    {
     					    im = SwingFXUtils.toFXImage(listEvent.get(i).getImageEvent(), null);
+        				    image.setImage(im);
+        				    image.setFitHeight(40);
+        				    image.setFitWidth(40);
     				    }
     				    else
     				    {
     				    	im = null;
     				    }
-    				    ImageView image = new ImageView();
-    				    image.setImage(im);
-    				    image.setFitHeight(40);
-    				    image.setFitWidth(40);
+    				   
 
         				//popOver.setContentNode(ss.getNode());
         		        PopOver popover = new PopOver();     
@@ -278,8 +278,11 @@ public class YearTimeline extends Timeline {
 										"Description : " + description );
 								text.setTextFill(Color.WHITE);
 								
-								
-								vbox.getChildren().addAll(image,text);
+								if(listEvent.get(i).getImageEvent() != null)
+								{
+									vbox.getChildren().addAll(image);
+								}
+								vbox.getChildren().addAll(text);
 								vbox.getChildren().addAll(close,modify,delete);
 			        	        vbox.setStyle("-fx-background-color: coral;");
 
@@ -300,7 +303,11 @@ public class YearTimeline extends Timeline {
 										"Description : " + description );
 								
 								text.setTextFill(Color.WHITE);
-								vbox.getChildren().addAll(image,text);
+								if(listEvent.get(i).getImageEvent() != null)
+								{
+									vbox.getChildren().add(image);
+								}
+								vbox.getChildren().add(text);
 								vbox.getChildren().addAll(close,modify,delete);
 			        	        vbox.setStyle("-fx-background-color: coral;");
 

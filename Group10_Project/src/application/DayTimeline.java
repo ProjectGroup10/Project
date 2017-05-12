@@ -13,7 +13,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -63,8 +62,7 @@ public class DayTimeline extends Timeline
 	    	{
 	    		days.add(Integer.toString(i));
 	    	}
-	    	
-	    	
+
 	        CategoryAxis xAxis = new CategoryAxis(days);
 	        //xAxis.setMinorTickVisible(false);
 	        xAxis.setLabel("Days");
@@ -246,7 +244,11 @@ public class DayTimeline extends Timeline
 									text.setTextFill(Color.WHITE);
 									
 									
-									vbox.getChildren().addAll(image,text);
+									if(listEvent.get(i).getImageEvent() != null)
+									{
+										vbox.getChildren().add(image);
+									}
+									vbox.getChildren().add(text);
 									vbox.getChildren().addAll(close,modify,delete);
 				        	        vbox.setStyle("-fx-background-color: coral;");
 
@@ -267,7 +269,11 @@ public class DayTimeline extends Timeline
 											"Description : " + description );
 									
 									text.setTextFill(Color.WHITE);
-									vbox.getChildren().addAll(image,text);
+									if(listEvent.get(i).getImageEvent() != null)
+									{
+										vbox.getChildren().add(image);
+									}
+									vbox.getChildren().add(text);
 									vbox.getChildren().addAll(close,modify,delete);
 				        	        vbox.setStyle("-fx-background-color: coral;");
 
