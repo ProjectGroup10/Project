@@ -21,7 +21,10 @@ public class TestDurationEvent {
 	@After
 	public void tearDown() throws Exception {
 	}
-
+	
+	/*
+	 * Test title 
+	 */
 	@Test
 	public void testTitle() {
 		Event e = new Event("Title", "", LocalDate.now(), LocalDate.now().plusDays(10), false, image,"png" );
@@ -37,6 +40,9 @@ public class TestDurationEvent {
 		assertEquals(e3.getTitleEvent(),"T*&_@£itleT*&_@£itleT*&_@£itleT*&_@£itle");
 	}
 	
+	/*
+	 * Test Start Date and EndDate 
+	 */
 	@Test
 	public void testDifferentDate()
 	{
@@ -81,22 +87,28 @@ public class TestDurationEvent {
 		assertEquals(e2__.getEndDatePickerEvent(),date2.plusDays(1000));		
 	}
 
+	/*
+	 * Test description 
+	 */
 	@Test
 	public void testDifferentDis()
 	{
-		Event e = new Event("", "discription", LocalDate.now(), LocalDate.now().plusDays(10), false, image,"png" );
-		assertEquals(e.getDescEvent(),"discription");
+		Event e = new Event("", "description", LocalDate.now(), LocalDate.now().plusDays(10), false, image,"png" );
+		assertEquals(e.getDescEvent(),"description");
 	
-		Event e1 = new Event("", "di^&_~!scri_.,ption", LocalDate.now(), LocalDate.now().plusDays(10), false, image,"png" );
-		assertEquals(e1.getDescEvent(),"di^&_~!scri_.,ption");
+		Event e1 = new Event("", "de^&_~!scri_.,ption", LocalDate.now(), LocalDate.now().plusDays(10), false, image,"png" );
+		assertEquals(e1.getDescEvent(),"de^&_~!scri_.,ption");
 		
-		Event e2 = new Event("", "di 54^8scription", LocalDate.now(), LocalDate.now().plusDays(10), false, image,"png" );
-		assertEquals(e2.getDescEvent(),"di 54^8scription");
+		Event e2 = new Event("", "de 54^8scription", LocalDate.now(), LocalDate.now().plusDays(10), false, image,"png" );
+		assertEquals(e2.getDescEvent(),"de 54^8scription");
 		
-		Event e3 = new Event("","di 54^8scriptiondi 54^8scriptiondi^&_~!scri_.,ptiondi^&_~!scri_.,ption", LocalDate.now(), LocalDate.now().plusDays(10), false, image,"png" );
-		assertEquals(e3.getDescEvent(),"di 54^8scriptiondi 54^8scriptiondi^&_~!scri_.,ptiondi^&_~!scri_.,ption");
+		Event e3 = new Event("","de 54^8scriptiondi 54^8scriptiondi^&_~!scri_.,ptiondi^&_~!scri_.,ption", LocalDate.now(), LocalDate.now().plusDays(10), false, image,"png" );
+		assertEquals(e3.getDescEvent(),"de 54^8scriptiondi 54^8scriptiondi^&_~!scri_.,ptiondi^&_~!scri_.,ption");
 	}
 	
+	/*
+	 * Test List of Event
+	 */
 	@Test 
 	public void testlistOfEvent()
 	{
@@ -104,12 +116,11 @@ public class TestDurationEvent {
 
 		for(int i = 0; i < 10000; i++)
 		{
-			Event e = new Event("title" + i, "discription" + i, date.plusDays(i), date.plusDays(100 + i), false, image,"png" );
+			Event e = new Event("title" + i, "description" + i, date.plusDays(i), date.plusDays(100 + i), false, image,"png" );
 			assertEquals(e.getTitleEvent(),"title" + i);
-			assertEquals(e.getDescEvent(),"discription" + i);
+			assertEquals(e.getDescEvent(),"description" + i);
 			assertEquals(e.getStartDatePickerEvent(),date.plusDays(i));
 			assertEquals(e.getEndDatePickerEvent(),date.plusDays(100 + i));
-
 		}
 	}
 }

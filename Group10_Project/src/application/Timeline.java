@@ -562,6 +562,7 @@ public abstract class Timeline
 	    DatePicker endDatePickerEvent = new DatePicker();
 	    TextArea DescField = new TextArea();
 	    DescField.setText(e.getDescEvent());
+		setDatePicker(startDatePickerEvent,endDatePickerEvent);
 	    Button addImage = new Button("Choose");
         Button submit = new Button("Submit");
 		GP.add(new Text("Event name: "), 0, 0 );
@@ -571,19 +572,12 @@ public abstract class Timeline
 	    Text endDate = new Text("End Date: ");
 
 	    if(!e.isDuration())
-	    {
-	    	GP.add(duration, 1, 2 );		
-	    	setDatePicker(startDatePickerEvent,endDatePickerEvent);
-
-	    }
-	    	
+	    	GP.add(duration, 1, 2 );
 	    if(e.isDuration())
 	    {
 	    	GP.add(endDate, 0, 3);
 	    	GP.add(endDatePickerEvent, 1, 3 );
 	    	endDatePickerEvent.setValue(e.getEndDatePickerEvent());
-	    	setDatePick(startDatePickerEvent,endDatePickerEvent);
-
 	    }
 
 	    duration.setOnAction(new EventHandler<ActionEvent>()
@@ -614,6 +608,8 @@ public abstract class Timeline
 	    GP.add(submit, 1, 6);
 	    stage.show();
 
+
+        setDatePicker(startDatePickerEvent,endDatePickerEvent);
 	    
 	    // listener when cliking on addImage
 	    addImage.setOnAction(new EventHandler<ActionEvent>() 
