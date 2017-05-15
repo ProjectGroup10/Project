@@ -11,23 +11,24 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" minHeight="500" minWidth="500" prefHeight="600" prefWidth="600" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainMenuController">
-  <children>
-    <VBox alignment="CENTER" prefHeight="222.0" prefWidth="301.0" spacing="20.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-      <children>
-            <ImageView fx:id="iv1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@image/image.png" />
-               </image></ImageView>
-        <HBox alignment="CENTER" prefHeight="57.0" prefWidth="281.0" spacing="20.0">
-          <children>
-            <Button mnemonicParsing="false" onAction="#goToCreateMode" text="Create Mode" />
-            <Button mnemonicParsing="false" onAction="#goToDisplayMode" text="Display Mode" />
-          </children>
-        </HBox>
-      </children>
-      <padding>
-        <Insets />
-      </padding>
-    </VBox>
-  </children>
+	<children>
+		<VBox alignment="CENTER" prefHeight="222.0" prefWidth="301.0" spacing="20.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+			<children>
+            	<ImageView  fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+					<image>
+						<Image url="image/image.png" backgroundLoading="true" />
+               	</image>
+            	</ImageView>
+        		<HBox alignment="CENTER" prefHeight="57.0" prefWidth="281.0" spacing="20.0">
+	          		<children>
+	            		<Button mnemonicParsing="false" onAction="#goToCreateMode" text="Create Mode" />
+	            		<Button mnemonicParsing="false" onAction="#goToDisplayMode" text="Display Mode" />
+	          		</children>
+        		</HBox>
+			</children>
+			<padding>
+				<Insets />
+			</padding>
+		</VBox>
+	</children>
 </AnchorPane>

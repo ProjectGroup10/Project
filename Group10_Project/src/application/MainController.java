@@ -14,6 +14,8 @@ import java.util.Base64;
 import java.util.Optional;
 
 import javax.imageio.ImageIO;
+
+
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -40,8 +42,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -71,7 +71,7 @@ public class MainController  {
 		Stage stage = new Stage();
         stage.setTitle("Form timeline"); // set the title of the window
         GridPane GP = new GridPane();
-	    Scene scene = new Scene(GP, 320, 180);
+	    Scene scene = new Scene(GP, 320, 150);
 	    stage.setScene(scene);
 	    String  style= getClass().getResource("application.css").toExternalForm(); //link to css file
 	    scene.getStylesheets().add(style);
@@ -80,10 +80,11 @@ public class MainController  {
 		GP.setHgap(10);
 		
 	    DatePicker startDateTimeline = new DatePicker(); 
-	    startDateTimeline.setValue(LocalDate.now());
+	    //startDateTimeline.setValue(LocalDate.now());
 
 	    DatePicker endDateTimeline = new DatePicker();
-	    endDateTimeline.setValue(LocalDate.now().plusDays(1));
+    	endDateTimeline.setDisable(true);
+	    
 
         TextField name = new TextField();
         Button submit = new Button("Submit");
@@ -98,13 +99,20 @@ public class MainController  {
 	    GP.add(new Label("End Date: "), 0, 2 );
 	    GP.add(endDateTimeline, 1, 2 );
 
-	    Label label = new Label();
-		label.setFont(new Font("Sans Serif",15));
-		label.setTextFill(Color.RED);
-		GP.add(label, 1, 5);
-		GP.add(submit,1,6);
+	   
+		GP.add(submit,1,3);
 	    
 	    stage.show();
+	    
+	    
+	    startDateTimeline.setOnAction(new EventHandler<ActionEvent>(){
+
+			public void handle(ActionEvent arg0) 
+			{
+		    	endDateTimeline.setDisable(false);
+			}	
+	    });
+	    
 	    
 	    
 	    // Listener when submitting
@@ -113,77 +121,41 @@ public class MainController  {
             @Override
             public void handle(ActionEvent e) 
             {
-            	if(name.getText() != null && !name.getText().isEmpty() )
+            	// Test if the user enter all informations
+            	if (!fill_value(name,startDateTimeline,endDateTimeline) && check_date(startDateTimeline,endDateTimeline)) 
             	{
-            		if(startDateTimeline.getValue().getYear() > endDateTimeline.getValue().getYear())
-    				{
-    					Alert alert = new Alert(AlertType.WARNING);
-    					alert.setTitle("Warning");
-    					alert.setHeaderText("Please check the date of you pick!");
-    					alert.showAndWait();
-    				}
-    				else if(startDateTimeline.getValue().getYear() == endDateTimeline.getValue().getYear())
-    				{
-    					if(startDateTimeline.getValue().getMonthValue() > endDateTimeline.getValue().getMonthValue() )
-    					{
-    						Alert alert = new Alert(AlertType.WARNING);
-    						alert.setTitle("Warning");
-    						alert.setHeaderText("Please check the date of you pick!");
-    						alert.showAndWait();
-    					}
-    					else if(startDateTimeline.getValue().getMonthValue() == endDateTimeline.getValue().getMonthValue())
-    					{
-    						if(startDateTimeline.getValue().getDayOfMonth() > endDateTimeline.getValue().getDayOfMonth())
-    						{
-    							Alert alert = new Alert(AlertType.WARNING);
-    							alert.setTitle("Warning");
-    							alert.setHeaderText("Please check the date of you pick!");
-    							alert.showAndWait();
-    						}
-    						else
-    						{
-    							// get the name of the timeline
-    			            	String titleTimeline = name.getText(); 
-    			            	// Creation of the new Timeline
-    			            	Timeline timeline = new Timeline(titleTimeline,startDateTimeline,endDateTimeline);
-    			            	// method addTimeline called
-    			            	addTimeline(timeline);
+            		// get the name of the timeline
+            		String titleTimeline = name.getText(); 
+            		Timeline timeline ;
+                	// Creation of the new Timeline
+            		if(isYearTimeline(startDateTimeline,endDateTimeline))
+            		{
+            			timeline =  new YearTimeline(titleTimeline,startDateTimeline.getValue(),endDateTimeline.getValue());
+            			timeline.initLineChart();
+                    	addTimeline(timeline);
 
-    			            	stage.close();
-    						}
-    					}
-    					else
-    					{
-    						// get the name of the timeline
-    		            	String titleTimeline = name.getText(); 
-    		            	// Creation of the new Timeline
-    		            	Timeline timeline = new Timeline(titleTimeline,startDateTimeline,endDateTimeline);
-    		            	// method addTimeline called
-    		            	addTimeline(timeline);
-
-    		            	stage.close();
-    					}
-    				}
-    				else
-    				{
-    					// get the name of the timeline
-    	            	String titleTimeline = name.getText(); 
-    	            	// Creation of the new Timeline
-    	            	Timeline timeline = new Timeline(titleTimeline,startDateTimeline,endDateTimeline);
-    	            	// method addTimeline called
-    	            	addTimeline(timeline);
-
-    	            	stage.close();
-    				}
-            	}
-            	else
-            	{
-            		label.setText("Title cannot be null!");
-            	}
+            		}
+            		else if(isMonthTimeline(startDateTimeline,endDateTimeline))
+            		{
+            			timeline = new MonthTimeline(titleTimeline,startDateTimeline.getValue(),endDateTimeline.getValue());
+            			timeline.initLineChart();
+            			addTimeline(timeline);
+            		}
+            		else
+            		{
+            			timeline = new DayTimeline(titleTimeline,startDateTimeline.getValue(),endDateTimeline.getValue());
+            			timeline.initLineChart();
+            			addTimeline(timeline);
+            		}
+                	
+                	// method addTimeline called
+                	stage.close();
+    			}
             }
         });
 	}
 	
+
 	/**
 	 * @role : Method who permit to add a timeline to the arrayList and to display a menu button
 	 * for this specific timeline, who contains the button add event or delete timeline
@@ -195,18 +167,20 @@ public class MainController  {
 
     	// HBox who contains the timeline 
     	HBox h = new HBox();
-    
+    	
     	// Menu button
         MenuItem DeleteTimeLine = new MenuItem("Delete Timeline");
         MenuItem AddEvent = new MenuItem("Add Event");
 
         MenuButton menuButton = new MenuButton("Options");
+
         //
         //
         menuButton.getItems().addAll(DeleteTimeLine, AddEvent);
         
-        vBoxModules.getChildren().add(menuButton);
 
+        vBoxModules.getChildren().add(menuButton);
+        	
         StackPane root = new StackPane();
         // add the lineChart to the StackPane
         root.getChildren().add(t.getLineChart());
@@ -237,6 +211,7 @@ public class MainController  {
             	alert.setContentText("Are you sure?");
 
             	Optional<ButtonType> result = alert.showAndWait();
+            
             	if (result.get() == ButtonType.OK){
             		// Remove the menu button corresponding to the timeline
                 	vBoxModules.getChildren().remove(menuButton);
@@ -244,16 +219,13 @@ public class MainController  {
                 	vBoxModules.getChildren().remove(h);	
                 	// Timeline removed from the list TimelineCollection
                 	TimelineCollection.remove(t);
-            	} else {
-            	    // ... user chose CANCEL or closed the dialog
-            	}
+            	
+            	} 
             	
             }
 	    });
 	}
-	
 
-	
 	@SuppressWarnings("unchecked")
 	/**
 	 * @role : method who permit to save the timelines into a Json File choose by the user
@@ -275,14 +247,16 @@ public class MainController  {
 			JSONArray events = new JSONArray();
 			// add the attributes of a timeline into the JsonObject timeline
 			timeline.put("TitleTimeline" , t.getTitle());
-			timeline.put("StartDateTimeline", t.getStartDate().getValue().toString());
-			timeline.put("EndDateTimeline",  t.getEndDate().getValue().toString());
+			timeline.put("StartDateTimeline", t.getStartDate().toString());
+			timeline.put("EndDateTimeline",  t.getEndDate().toString());
 			
 			// foreach the events of a specific timeline from the list of events of this timeline
 			for(Event e : t.getListEvent())
 			{
 				// for each event, a new Json object
 				JSONObject eventObject = new JSONObject();
+				
+				// set the image
 				String imageString = null;
 				if(e.getImageEvent() != null&& (!e.getImageType().equals("")))//make sure photo not null
 				{
@@ -306,12 +280,14 @@ public class MainController  {
 				{
 					imageString = " ";
 				}
+				
 				// add the attributes of a event into the JsonObject event
 				eventObject.put("TitleEvent" , e.getTitleEvent());
 				eventObject.put("DescEvent" , e.getDescEvent());
 				eventObject.put("Duration" , e.isDuration());
-				eventObject.put("StartDateEvent", e.getStartDatePickerEvent().getValue().toString());
-				eventObject.put("EndDateEvent",  e.getEndDatePickerEvent().getValue().toString());
+				eventObject.put("StartDateEvent", e.getStartDatePickerEvent().toString());
+				if(e.isDuration())
+					eventObject.put("EndDateEvent",  e.getEndDatePickerEvent().toString());
 				eventObject.put("Photos", imageString);
 				eventObject.put("ImageType", e.getImageType());
 				// add the event Json object to the Json event array 
@@ -330,6 +306,7 @@ public class MainController  {
 		// JFileChoose use to permit to the user to save the timelines in his own file 
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save file or replace exists file");
+
 		FileChooser.ExtensionFilter extFiltertxt = 
                 new FileChooser.ExtensionFilter("txt files (*.txt)", "*.txt");
         FileChooser.ExtensionFilter extFilterjson = 
@@ -347,10 +324,10 @@ public class MainController  {
 	    }
 	    else
 	    {
+	    	
 	    }
 	}
 	
-		
 	/**
 	 * @role : Method who permit to load a JsonFile where you saved your timelines.
 	 * @throws IOException
@@ -363,8 +340,9 @@ public class MainController  {
         JSONParser parser = new JSONParser();
         // File reader to read the file
         FileReader reader = null;
-        // FileChooser used to choose the which file you want to load
+        // FileChoose used to choose the which file you want to load
         FileChooser fileChooser = new FileChooser();
+        
         FileChooser.ExtensionFilter extFiltertxt = 
                 new FileChooser.ExtensionFilter("txt files (*.txt)", "*.txt");
         FileChooser.ExtensionFilter extFilterjson = 
@@ -372,62 +350,96 @@ public class MainController  {
         fileChooser.getExtensionFilters()
                 .addAll( extFiltertxt, extFilterjson);
 		File file = fileChooser.showOpenDialog(null);
-	    reader=new FileReader(file);  
-	    // Parse the reader 
-        Object obj = parser.parse(reader);
-        // Get the JsonObject
-        JSONObject content = (JSONObject) obj;
-        // get the array "Timelines" from the JsonObject
-        JSONArray TimelineCollection = (JSONArray) content.get("Timelines");
-
-        // for all object into the JsonArray
-        for(Object o : TimelineCollection)
-        {
-        	// Get the JSONObject
-        	JSONObject timeline = (JSONObject) o;
-			String TitleTimeline = (String) timeline.get("TitleTimeline");
-			String StartDate = (String) timeline.get("StartDateTimeline");
-			String EndDate = (String) timeline.get("EndDateTimeline");
-
-			// Create the DatePicker
-			DatePicker StartDateTimeline = new DatePicker(LocalDate.parse(StartDate));
-			DatePicker EndDateTimeline = new DatePicker(LocalDate.parse(EndDate));
-			// Create the timeline with the previous informations
-			Timeline t = new Timeline(TitleTimeline,StartDateTimeline,EndDateTimeline);
-			// add the timeline
-			addTimeline(t);
-			// Json array events
-	        JSONArray EventCollection = (JSONArray) timeline.get("Events");
-	        // Foreach each events object
-	        for(Object e : EventCollection)
+		if(file != null)
+		{
+		    reader=new FileReader(file);  
+		    // Parse the reader 
+	        Object obj = parser.parse(reader);
+	        // Get the JsonObject
+	        JSONObject content = (JSONObject) obj;
+	        // get the array "Timelines" from the JsonObject
+	        JSONArray TimelineCollection = (JSONArray) content.get("Timelines");
+	        // for all object into the JsonArray
+	        for(Object o : TimelineCollection)
 	        {
-	        	JSONObject event = (JSONObject) e;
-	        	String TitleEvent = (String) event.get("TitleEvent");
-				String StartDateEvent = (String) event.get("StartDateEvent");
-				String EndDateEvent = (String) event.get("EndDateEvent");
-				DatePicker StartDateNewEvent = new DatePicker(LocalDate.parse(StartDateEvent));
-				DatePicker EndDateNewEvent = new DatePicker(LocalDate.parse(EndDateEvent));
-	        	String DescEvent = (String) event.get("DescEvent");
-	        	boolean duration = (boolean) event.get("Duration");
-	        	String imagetype = (String) event.get("ImageType");
-	        	String photos = (String) event.get("Photos");
-	        	BufferedImage image;
-	        	if(!photos.equals(" "))
-	        	{
-	        		byte[] photosByte = Base64.getDecoder().decode(photos);
-		        	ByteArrayInputStream in = new ByteArrayInputStream(photosByte); 
-		        	image = ImageIO.read(in);
-	        	}
-	        	else
-	        	{
-	        		image = null;
-	        	}
-	        	// create an event 
-	        	Event newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent,EndDateNewEvent,duration,image,imagetype);
-	        	// call the addEvent method from the class Timeline
-	        	t.addEvent(newEvent);
-	        }   
-         }
+	        	// Get the JSONObject
+	        	JSONObject timeline = (JSONObject) o;
+				String TitleTimeline = (String) timeline.get("TitleTimeline");
+				String StartDate = (String) timeline.get("StartDateTimeline");
+				String EndDate = (String) timeline.get("EndDateTimeline");
+
+				// Create the DatePicker
+				DatePicker StartDateTimeline = new DatePicker(LocalDate.parse(StartDate));
+				DatePicker EndDateTimeline = new DatePicker(LocalDate.parse(EndDate));
+
+				// Create the timeline with the previous informations
+				
+				Timeline t ;
+
+				if(isYearTimeline(StartDateTimeline,EndDateTimeline))
+	    		{
+	    			t =  new YearTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
+        			t.initLineChart();
+	    		}
+	    		else if(isMonthTimeline(StartDateTimeline,EndDateTimeline))
+	    		{
+	    			t = new MonthTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
+        			t.initLineChart();
+	    		}
+	    		else
+	    		{
+	    			t = new DayTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
+        			t.initLineChart();
+
+	    		}
+	        	addTimeline(t);
+	        	 
+
+				// Json array events
+		        JSONArray EventCollection = (JSONArray) timeline.get("Events");
+		        // Foreach each events object
+		        for(Object e : EventCollection)
+		        {
+		        	JSONObject event = (JSONObject) e;
+		        	String TitleEvent = (String) event.get("TitleEvent");
+					String StartDateEvent = (String) event.get("StartDateEvent");
+
+		        	String DescEvent = (String) event.get("DescEvent");
+		        	boolean duration = (boolean) event.get("Duration");
+		        	Event newEvent = null;
+		        	
+					DatePicker StartDateNewEvent = new DatePicker(LocalDate.parse(StartDateEvent));
+		        	String imagetype = (String) event.get("ImageType");
+		        	String photos = (String) event.get("Photos");
+		        	BufferedImage image;
+		        	if(!photos.equals(" "))
+		        	{
+		        		byte[] photosByte = Base64.getDecoder().decode(photos);
+			        	ByteArrayInputStream in = new ByteArrayInputStream(photosByte); 
+			        	image = ImageIO.read(in);
+		        	}
+		        	else
+		        	{
+		        		image = null;
+		        	}
+
+		        	if(duration)
+		        	{
+						String EndDateEvent = (String) event.get("EndDateEvent");
+						DatePicker EndDateNewEvent = new DatePicker(LocalDate.parse(EndDateEvent));
+			        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent.getValue(),EndDateNewEvent.getValue(),duration,image,imagetype);
+		        	}
+		        	else if(!duration)
+		        	{
+
+			        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent.getValue(),duration,image,imagetype);
+		        	}
+		        	// call the addEvent method from the class Timeline
+		        	t.addEvent(newEvent);
+		        }   
+		    }
+		
+        }
 	}
 	
 	/**
@@ -460,6 +472,99 @@ public class MainController  {
 		};
         endDateTimeline.setDayCellFactory(dayCellFactory);
 	}
+
+	protected boolean fill_value(TextField name, DatePicker startDateTimeline, DatePicker endDateTimeline) 
+	{
+		if (name.getText() == null || name.getText().trim().isEmpty()) 
+		{
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Warning");
+			alert.setHeaderText("Please give a name to your timeline!");
+			alert.showAndWait();
+			return true ;
+		}
+		if(startDateTimeline.getValue()==null)
+		{
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Warning");
+			alert.setHeaderText("Please select the start date");
+			alert.showAndWait();
+			return true ;
+		}
+		if(endDateTimeline.getValue()==null)
+		{
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Warning");
+			alert.setHeaderText("Please select the end date");
+			alert.showAndWait();
+			return true ;
+		}
+		
+		return false;
+	}
+
+	protected boolean check_date(DatePicker startDateTimeline, DatePicker endDateTimeline) 
+	{
+		LocalDate start = startDateTimeline.getValue();
+		LocalDate end = endDateTimeline.getValue();
+		
+		if(end.isEqual(start) || end.isBefore(start))
+		{
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Warning");
+			alert.setHeaderText("Please check the date of you pick!");
+			alert.showAndWait();
+			return false ;
+		}
+		return true;
+	}
+
+	private boolean isYearTimeline(DatePicker startDateTimeline, DatePicker endDateTimeline)
+	{
+		String[] splitStartDateTimeline = startDateTimeline.getValue().toString().split("-");
+		int startYear = Integer.parseInt(splitStartDateTimeline[0]);
+
+		String[] splitEndDateTimeline = endDateTimeline.getValue().toString().split("-");
+		int endYear = Integer.parseInt(splitEndDateTimeline[0]);
+
+		if(startYear != endYear) 
+			return true ;
+		else
+			return false ;
+	}
+	
+	private boolean isMonthTimeline(DatePicker startDateTimeline, DatePicker endDateTimeline)
+	{
+		String[] splitStartDateTimeline = startDateTimeline.getValue().toString().split("-");
+		int startYear = Integer.parseInt(splitStartDateTimeline[0]);
+		int startMonth = Integer.parseInt(splitStartDateTimeline[1]);
+		String[] splitEndDateTimeline = endDateTimeline.getValue().toString().split("-");
+		int endYear = Integer.parseInt(splitEndDateTimeline[0]);
+		int endMonth = Integer.parseInt(splitEndDateTimeline[1]);
+
+		if(startYear == endYear  && startMonth != endMonth) 
+			return true ;
+		else
+			return false ;
+	}
+	
+	/*
+	private boolean isDayTimeline(DatePicker startDateTimeline, DatePicker endDateTimeline)
+	{
+		String[] splitStartDateTimeline = startDateTimeline.getValue().toString().split("-");
+		int startYear = Integer.parseInt(splitStartDateTimeline[0]);
+		int startMonth = Integer.parseInt(splitStartDateTimeline[1]);
+		String[] splitEndDateTimeline = endDateTimeline.getValue().toString().split("-");
+		int endYear = Integer.parseInt(splitEndDateTimeline[0]);
+		int endMonth = Integer.parseInt(splitEndDateTimeline[1]);
+
+
+		if(startYear == endYear  && startMonth == endMonth ) 
+			return true ;
+		else
+			return false ;
+	}
+	*/
 }
 		
 

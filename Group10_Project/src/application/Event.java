@@ -2,8 +2,9 @@ package application;
 
 
 import java.awt.image.BufferedImage;
+import java.time.LocalDate;
+
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.DatePicker;
 
 /**
  * @role This class represent the event itself
@@ -12,18 +13,30 @@ import javafx.scene.control.DatePicker;
  */
 public  class Event {
 
+	/*
 	private int id = 0 ;
 	private String TitleEvent;
 	private String DescEvent;
 	private DatePicker StartDatePickerEvent;
 	private DatePicker EndDatePickerEvent;
 	private BufferedImage imageEvent;
+	private String imageType ;
+	private boolean duration ; 
+	private XYChart.Series<String, Number> series ;*/
+	
+	private int id = 0 ;
+	private String TitleEvent;
+	private String DescEvent;
+	private LocalDate StartDatePickerEvent;
+	private LocalDate EndDatePickerEvent;
+	private BufferedImage imageEvent;
 	private boolean duration ; 
 	private String imageType;
 	private XYChart.Series<String, Number> series ;
 
-	public Event (String TitleEvent, String DescEvent, DatePicker StartDatePickerEvent, DatePicker EndDatePickerEvent, boolean duration, BufferedImage imageEvent,String imagetype)
+	public Event (String TitleEvent, String DescEvent, LocalDate StartDatePickerEvent, LocalDate EndDatePickerEvent, boolean duration, BufferedImage imageEvent,String imagetype)
 	{
+	
 		this.id = id++ ;
 		this.TitleEvent = TitleEvent ;
 		this.DescEvent = DescEvent;
@@ -34,7 +47,26 @@ public  class Event {
 		// initialize the series when creating an event
 		this.series = new XYChart.Series<String, Number>();
 		this.imageType = imagetype;
+
+
 	}
+	
+	public Event (String TitleEvent, String DescEvent, LocalDate StartDatePickerEvent,  boolean duration, BufferedImage imageEvent,String imagetype)
+	{
+		this.id = id++ ;
+		this.TitleEvent = TitleEvent ;
+		this.DescEvent = DescEvent;
+		this.StartDatePickerEvent = StartDatePickerEvent ;
+		this.duration = duration ;
+		this.imageEvent = imageEvent;
+		// initialize the series when creating an event
+		this.series = new XYChart.Series<String, Number>();
+		this.imageType = imagetype;
+
+		
+	}
+
+
 
 	/**
 	 * Getter
@@ -120,7 +152,7 @@ public  class Event {
 	 * Getter
 	 * @return StartDatePickerEvent
 	 */
-	public DatePicker getStartDatePickerEvent() {
+	public LocalDate getStartDatePickerEvent() {
 		return StartDatePickerEvent;
 	}
 
@@ -128,7 +160,7 @@ public  class Event {
 	 * Setter
 	 * @param startDatePickerEvent
 	 */
-	public void setStartDatePickerEvent(DatePicker startDatePickerEvent) {
+	public void setStartDatePickerEvent(LocalDate startDatePickerEvent) {
 		StartDatePickerEvent = startDatePickerEvent;
 	}
 
@@ -136,14 +168,14 @@ public  class Event {
 	 * Getter
 	 * @return EndDatePickerEvent
 	 */
-	public DatePicker getEndDatePickerEvent() {
+	public LocalDate getEndDatePickerEvent() {
 		return EndDatePickerEvent;
 	}
 	/**
 	 * Setter
 	 * @param endDatePickerEvent
 	 */
-	public void setEndDatePickerEvent(DatePicker endDatePickerEvent) {
+	public void setEndDatePickerEvent(LocalDate endDatePickerEvent) {
 		EndDatePickerEvent = endDatePickerEvent;
 	}
 
