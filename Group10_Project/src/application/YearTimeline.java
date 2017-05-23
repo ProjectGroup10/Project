@@ -387,11 +387,15 @@ public class YearTimeline extends Timeline {
         }
         im = null;
 	}
+<<<<<<< HEAD
 
 	/**
 	 * @role method displayEvent who permit to display an event to the line chart, used in the display mode
 	 * @param event
 	 */
+=======
+	
+>>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 	public void DisplayAddEvent(Event event)
 	{
 

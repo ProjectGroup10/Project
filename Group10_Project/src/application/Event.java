@@ -23,7 +23,10 @@ public class Event {
 	private String imageType;
 	private XYChart.Series<String, Number> series ;
 
+<<<<<<< HEAD
 	// Constructor for a duration event 
+=======
+>>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 	public Event (String TitleEvent, String DescEvent, LocalDate StartDatePickerEvent, LocalDate EndDatePickerEvent, boolean duration, BufferedImage imageEvent,String imagetype)
 	{
 		this.id = id++ ;
@@ -38,7 +41,10 @@ public class Event {
 		this.imageType = imagetype;
 	}
 	
+<<<<<<< HEAD
 	// Constructor for an event without duration
+=======
+>>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 	public Event (String TitleEvent, String DescEvent, LocalDate StartDatePickerEvent,  boolean duration, BufferedImage imageEvent,String imagetype)
 	{
 		this.id = id++ ;

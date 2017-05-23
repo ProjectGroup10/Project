@@ -41,6 +41,10 @@ public abstract class Timeline
 	protected String title ; 
 	protected LocalDate startDate ; 
 	protected LocalDate endDate ;
+<<<<<<< HEAD
+=======
+    //private Image image;
+>>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 
 	// List of events
 	protected ArrayList<Event> listEvent ;
@@ -51,12 +55,15 @@ public abstract class Timeline
 	private String imageType;
 
 
+<<<<<<< HEAD
 	/**
 	 * Constructor 
 	 * @param title
 	 * @param startTime
 	 * @param endTime
 	 */
+=======
+>>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 	public Timeline (String title, LocalDate startTime, LocalDate endTime)
 	{
 		this.title = title ;
@@ -573,9 +580,20 @@ public abstract class Timeline
 	    GP.add(startDatePickerEvent, 1, 1 );
 	    Text endDate = new Text("End Date: ");
 
+<<<<<<< HEAD
 	   
 	    GP.add(duration, 1, 2 );
 
+=======
+	    if(!e.isDuration())
+	    	GP.add(duration, 1, 2 );
+	    if(e.isDuration())
+	    {
+	    	GP.add(endDate, 0, 3);
+	    	GP.add(endDatePickerEvent, 1, 3 );
+	    	endDatePickerEvent.setValue(e.getEndDatePickerEvent());
+	    }
+>>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 
 	    duration.setOnAction(new EventHandler<ActionEvent>()
 	    {
@@ -652,14 +670,17 @@ public abstract class Timeline
 				Event event;
 				if (!fill_value(nameEvent,startDatePickerEvent,endDatePickerEvent,duration.isSelected()) && check_date(startDatePickerEvent,endDatePickerEvent)) 
 	            {
-					if(duration.isSelected())
+					if(e.isDuration())
 					{
 	                   	event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent.getValue(),endDatePickerEvent.getValue(),true,e.getImageEvent(),e.getImageType());
 					}
 	        	    else
 	                   	 event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent.getValue(),false,e.getImageEvent(),e.getImageType());
+<<<<<<< HEAD
 
 	            	deleteEvent(e);
+=======
+>>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 
 					addEvent(event);
 
