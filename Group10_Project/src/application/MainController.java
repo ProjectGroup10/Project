@@ -221,11 +221,7 @@ public class MainController  {
 	    });
 	}
 
-<<<<<<< HEAD
-	
-=======
-	@SuppressWarnings("unchecked")
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
+
 	/**
 	 * @role : method who permit to save the timelines into a Json File choose by the user
 	 * @throws IOException
@@ -359,7 +355,7 @@ public class MainController  {
 	        JSONObject content = (JSONObject) obj;
 	        // get the array "Timelines" from the JsonObject
 	        JSONArray TimelineCollection = (JSONArray) content.get("Timelines");
-<<<<<<< HEAD
+
 	        
 	        if(TimelineCollection!=null)
 	        {
@@ -447,88 +443,6 @@ public class MainController  {
 				    }
 		        }
 	        }    
-=======
-	        // for all object into the JsonArray
-	        for(Object o : TimelineCollection)
-	        {
-	        	// Get the JSONObject
-	        	JSONObject timeline = (JSONObject) o;
-				String TitleTimeline = (String) timeline.get("TitleTimeline");
-				String StartDate = (String) timeline.get("StartDateTimeline");
-				String EndDate = (String) timeline.get("EndDateTimeline");
-
-				// Create the DatePicker
-				DatePicker StartDateTimeline = new DatePicker(LocalDate.parse(StartDate));
-				DatePicker EndDateTimeline = new DatePicker(LocalDate.parse(EndDate));
-
-				// Create the timeline with the previous informations
-				
-				Timeline t ;
-
-				if(isYearTimeline(StartDateTimeline,EndDateTimeline))
-	    		{
-	    			t =  new YearTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
-        			t.initLineChart();
-	    		}
-	    		else if(isMonthTimeline(StartDateTimeline,EndDateTimeline))
-	    		{
-	    			t = new MonthTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
-        			t.initLineChart();
-	    		}
-	    		else
-	    		{
-	    			t = new DayTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
-        			t.initLineChart();
-
-	    		}
-	        	addTimeline(t);
-	        	 
-
-				// Json array events
-		        JSONArray EventCollection = (JSONArray) timeline.get("Events");
-		        // Foreach each events object
-		        for(Object e : EventCollection)
-		        {
-		        	JSONObject event = (JSONObject) e;
-		        	String TitleEvent = (String) event.get("TitleEvent");
-					String StartDateEvent = (String) event.get("StartDateEvent");
-
-		        	String DescEvent = (String) event.get("DescEvent");
-		        	boolean duration = (boolean) event.get("Duration");
-		        	Event newEvent = null;
-		        	
-					DatePicker StartDateNewEvent = new DatePicker(LocalDate.parse(StartDateEvent));
-		        	String imagetype = (String) event.get("ImageType");
-		        	String photos = (String) event.get("Photos");
-		        	BufferedImage image;
-		        	if(!photos.equals(" "))
-		        	{
-		        		byte[] photosByte = Base64.getDecoder().decode(photos);
-			        	ByteArrayInputStream in = new ByteArrayInputStream(photosByte); 
-			        	image = ImageIO.read(in);
-		        	}
-		        	else
-		        	{
-		        		image = null;
-		        	}
-
-		        	if(duration)
-		        	{
-						String EndDateEvent = (String) event.get("EndDateEvent");
-						DatePicker EndDateNewEvent = new DatePicker(LocalDate.parse(EndDateEvent));
-			        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent.getValue(),EndDateNewEvent.getValue(),duration,image,imagetype);
-		        	}
-		        	else if(!duration)
-		        	{
-
-			        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent.getValue(),duration,image,imagetype);
-		        	}
-		        	// call the addEvent method from the class Timeline
-		        	t.addEvent(newEvent);
-		        }   
-		    }
-		
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
         }
 	}
 	

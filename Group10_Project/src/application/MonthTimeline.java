@@ -41,17 +41,14 @@ import javafx.scene.paint.Color;
  */
 public class MonthTimeline extends Timeline
 {
-<<<<<<< HEAD
+    private Image im;
+
 	/**
 	 * Constructor for the class MonthTimeline
 	 * @param title
 	 * @param startTime
 	 * @param endTime
 	 */
-=======
-
-
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 	public MonthTimeline(String title, LocalDate startTime, LocalDate endTime) {
 		super(title, startTime, endTime);
 
@@ -60,15 +57,11 @@ public class MonthTimeline extends Timeline
 		this.listEvent = new ArrayList<Event>() ;
 	}
 
-<<<<<<< HEAD
 	// 
 	/**
 	 * @role : Method to initialize the line chart of the corresponding timeline
 	 */
-=======
-	@Override
-	// method to initialize the line chart of the corresponding timeline
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
+
 	protected void initLineChart() 
 	{
 		String startDateTimeline = startDate.toString();
@@ -158,58 +151,35 @@ public class MonthTimeline extends Timeline
 
 					for(int i = 0 ; i< listEvent.size() ; i++)
 		        	{	
-<<<<<<< HEAD
         				Event ev = listEvent.get(i);
 
 						LocalDate a = event.getStartDatePickerEvent();
 	        			
 						// set the LocalDate to d, otherwise provide a null error when testing
-=======
-						LocalDate a = event.getStartDatePickerEvent();
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 	        			LocalDate d = a ;
 						if(event.isDuration())
 	        				d = event.getEndDatePickerEvent();
 
-<<<<<<< HEAD
 	        			LocalDate b = ev.getStartDatePickerEvent();
-=======
-	        			LocalDate b = listEvent.get(i).getStartDatePickerEvent();
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 	        			
 	        			// set the LocalDate to c, otherwise provide a null error when testing
         				LocalDate c = b ;
-<<<<<<< HEAD
 						if (ev.isDuration())
 	        				c = ev.getEndDatePickerEvent();
-=======
-						if (listEvent.get(i).isDuration())
-	        				c = listEvent.get(i).getEndDatePickerEvent();
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 
 						if(a.isEqual(b) || a.isEqual(c) || b.isEqual(d) || c.isEqual(d))
 		        		{
 							if(ev.isDuration())
 							{
 
-<<<<<<< HEAD
 								text = new String("Title Event:  " + ev.getTitleEvent() + "\n" +
 										"Start date event: " + StartDate + "\n" + 
 										"End date event : " + ev.getEndDatePickerEvent().toString() + "\n" );
-=======
-								text = new String("Title Event:  " + listEvent.get(i).getTitleEvent() + "\n" +
-										"Start date event: " + StartDate + "\n" + 
-										"End date event : " + listEvent.get(i).getEndDatePickerEvent().toString() + "\n" );
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 							}
 							else
 							{
 
-<<<<<<< HEAD
 								text = new String("Title Event:  " + ev.getTitleEvent() + "\n" +
-=======
-								text = new String("Title Event:  " + listEvent.get(i).getTitleEvent() + "\n" +
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 										"Start date event: " + StartDate + "\n" );
 							}
 		        		}
@@ -230,19 +200,11 @@ public class MonthTimeline extends Timeline
 				{
         			for(int i = 0 ; i< listEvent.size() ; i++)
 		        	{   
-<<<<<<< HEAD
         				Event ev = listEvent.get(i);
 
-        				Image im;
     				    ImageView image = new ImageView();
 
     				    if(ev.getImageEvent() != null)
-=======
-        				Image im;
-    				    ImageView image = new ImageView();
-
-    				    if(listEvent.get(i).getImageEvent() != null)
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
     				    {
     					    im = SwingFXUtils.toFXImage(ev.getImageEvent(), null);
     				    }
@@ -253,34 +215,19 @@ public class MonthTimeline extends Timeline
     				    image.setImage(im);
     				    image.setFitHeight(40);
     				    image.setFitWidth(40);
-<<<<<<< HEAD
 
     				    PopOver popover = new PopOver();     
         				
-=======
-        				//popOver.setContentNode(ss.getNode());
-        		        PopOver popover = new PopOver();     
-        				
-        				Event ev = listEvent.get(i);
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 	        			LocalDate a = event.getStartDatePickerEvent();
 	        			LocalDate d = a ;
 						if(event.isDuration())
 	        				d = event.getEndDatePickerEvent();
 
-<<<<<<< HEAD
 	        			LocalDate b = ev.getStartDatePickerEvent();
 	        			
         				LocalDate c = b ;
 						if (ev.isDuration())
 	        				c = ev.getEndDatePickerEvent();
-=======
-	        			LocalDate b = listEvent.get(i).getStartDatePickerEvent();
-	        			
-        				LocalDate c = b ;
-						if (listEvent.get(i).isDuration())
-	        				c = listEvent.get(i).getEndDatePickerEvent();
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 
 
 				        Button close = new Button("Close");
@@ -295,10 +242,8 @@ public class MonthTimeline extends Timeline
 						    // Create three different buttons
 						    VBox vbox = new VBox();
 						    vbox.setPadding(new Insets(10,10,10,10));
-						    //Scene scene = new Scene(vbox, 400, 400);
 						    StackPane s = new StackPane(vbox);
 						    
-						    //stage.setScene(scene);*/
 						    Label text = null ;
 					    	String description = parseString(ev.getDescEvent());
 
@@ -310,18 +255,11 @@ public class MonthTimeline extends Timeline
 						    if(ev.isDuration())
 							{
 						    	
-<<<<<<< HEAD
 								text = new Label("Title Event:  " + ev.getTitleEvent() + "\n" +
 										"Start date event: " + StartDate + "\n" + 
 										"End date event: " + ev.getEndDatePickerEvent().toString() + "\n" + 
-=======
-								text = new Label("Title Event:  " + listEvent.get(i).getTitleEvent() + "\n" +
-										"Start date event: " + StartDate + "\n" + 
-										"End date event: " + listEvent.get(i).getEndDatePickerEvent().toString() + "\n" + 
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 										"Description: " + description );
 								text.setTextFill(Color.BLACK);
-								
 								
 								if(event.getImageEvent() != null)
 								{
@@ -345,20 +283,12 @@ public class MonthTimeline extends Timeline
 							}
 							else
 							{
-<<<<<<< HEAD
 								text = new Label("Title Event:  " + ev.getTitleEvent() + "\n" +
-=======
-								text = new Label("Title Event:  " + listEvent.get(i).getTitleEvent() + "\n" +
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 										"Start date event: " + StartDate + "\n" + 
 										"Description: " + description );
 								
 								text.setTextFill(Color.BLACK);
-<<<<<<< HEAD
 								if(ev.getImageEvent() != null)
-=======
-								if(listEvent.get(i).getImageEvent() != null)
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 								{
 									vbox.getChildren().add(image);
 								}
@@ -423,23 +353,17 @@ public class MonthTimeline extends Timeline
 		        	}
 				}
 	    	});   
+        im = null;
         }	
 	}
 	
-<<<<<<< HEAD
 	/**
 	 * @role method used in the display mode, permit to display the event added, but impossible to modify or delete this event 
 	 */
 	public void DisplayAddEvent(Event event)
 	{    	
-=======
-	public void DisplayAddEvent(Event event)
-	{
-
-		// add the event to the list of event 
     	listEvent.add(event);
-    	
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
+
     	String StartDate = event.getStartDatePickerEvent().toString();
 		String EndDate = "" ;
     	String[] splitStartDate = StartDate.split("-");
@@ -462,10 +386,6 @@ public class MonthTimeline extends Timeline
 	        event.getSeries().setName(event.getTitleEvent());
 	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXstart, startDay));
 	        event.getSeries().getData().add(new XYChart.Data<String, Number>(axisXend, endDay));
-<<<<<<< HEAD
-=======
-	        lineChart.setStyle(".default-color0.chart-series-line { -fx-stroke: #e9967a; }");
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 		}
 		else // it's a non duration event
 		{
@@ -477,24 +397,11 @@ public class MonthTimeline extends Timeline
         lineChart.getData().add(event.getSeries());	
         
         // for each data for a series
-<<<<<<< HEAD
         for (XYChart.Data<String, Number> ss :  event.getSeries().getData()) 
         {
 		    // tooltip permit to display something when just passing the mouse over the event
         	ss.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED,new EventHandler<MouseEvent>() 
 			{
-=======
-
-        for (XYChart.Data<String, Number> ss :  event.getSeries().getData()) 
-        {
-        	
-        	////////------------------------------- TODODOODODODO ------------------------------
-		    // tooltip permit to display something when just passing the mouse over the event
-
-        	ss.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED,new EventHandler<MouseEvent>() 
-			{
-
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 				public void handle(MouseEvent e) 
 				{
 				    String text = null ;
@@ -527,23 +434,11 @@ public class MonthTimeline extends Timeline
 								text = new String("Title Event:  " + listEvent.get(i).getTitleEvent() + "\n" +
 										"Start date event: " + StartDate + "\n" );
 							}
-<<<<<<< HEAD
 		        		}		
 						Tooltip tool = new Tooltip(text);
 						Tooltip.install( ss.getNode(), tool);
 		        	}
 				}
-=======
-		        		}
-						
-						Tooltip tool = new Tooltip(text);
-						Tooltip.install( ss.getNode(), tool);
-
-		        	}
-
-				}
-        		
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 			});
         	
         	// when clicking on the event 
@@ -567,10 +462,6 @@ public class MonthTimeline extends Timeline
     				    image.setFitHeight(40);
     				    image.setFitWidth(40);
 
-<<<<<<< HEAD
-=======
-        				//popOver.setContentNode(ss.getNode());
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
         		        PopOver popover = new PopOver();     
         				
 	        			LocalDate a = event.getStartDatePickerEvent();
@@ -591,15 +482,8 @@ public class MonthTimeline extends Timeline
 						    // Create three different buttons
 						    VBox vbox = new VBox();
 						    vbox.setPadding(new Insets(10,10,10,10));
-<<<<<<< HEAD
 						    StackPane s = new StackPane(vbox);
 						    
-=======
-						    //Scene scene = new Scene(vbox, 400, 400);
-						    StackPane s = new StackPane(vbox);
-						    
-						    //stage.setScene(scene);*/
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 						    Label text = null ;
 					    	String description = parseString(listEvent.get(i).getDescEvent());
 
@@ -662,7 +546,6 @@ public class MonthTimeline extends Timeline
 		        				popover.show(ss.getNode());
 
 							}
-						    
 		        		}
 		        		// Listener for the close button
 					    close.setOnAction(new EventHandler<ActionEvent>()

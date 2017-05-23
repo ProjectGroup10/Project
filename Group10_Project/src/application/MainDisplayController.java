@@ -55,15 +55,10 @@ public class MainDisplayController {
         fileChooser.getExtensionFilters()
                 .addAll( extFiltertxt, extFilterjson);
 		File file = fileChooser.showOpenDialog(null);
-<<<<<<< HEAD
-		if(file != null)
-		{
-			reader=new FileReader(file);  
-=======
+
 	   if(file != null)
 	   {
 		   reader=new FileReader(file);  
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 		    // Parse the reader 
 	        Object obj = parser.parse(reader);
 	        // Get the JsonObject
@@ -71,7 +66,6 @@ public class MainDisplayController {
 	        // get the array "Timelines" from the JsonObject
 	        JSONArray TimelineCollection = (JSONArray) content.get("Timelines");
 
-<<<<<<< HEAD
 	        if(TimelineCollection!=null)
 	        {
 		        // for all object into the JsonArray
@@ -163,95 +157,7 @@ public class MainDisplayController {
 	         	}
         	}
    		}
-=======
-	        // for all object into the JsonArray
-	        for(Object o : TimelineCollection)
-	        {
-	        	HBox h = new HBox();
-	        	// Get the JSONObject
-	        	JSONObject timeline = (JSONObject) o;
-				String TitleTimeline = (String) timeline.get("TitleTimeline");
-				String StartDate = (String) timeline.get("StartDateTimeline");
-				String EndDate = (String) timeline.get("EndDateTimeline");
 
-				// Create the DatePicker
-				DatePicker StartDateTimeline = new DatePicker(LocalDate.parse(StartDate));
-				DatePicker EndDateTimeline = new DatePicker(LocalDate.parse(EndDate));
-				// Create the timeline with the previous informations
-				Timeline t ;
-
-				if(isYearTimeline(StartDateTimeline,EndDateTimeline))
-	    		{
-	    			t =  new YearTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
-	    		    t.initLineChart();
-	    		}
-	    		else if(isMonthTimeline(StartDateTimeline,EndDateTimeline))
-	    		{
-	    			t = new MonthTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
-	    		    t.initLineChart();
-	    		}
-	    		else
-	    		{
-	    			t = new DayTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
-	    		    t.initLineChart();
-	    		}
-				// add the timeline
-				StackPane root = new StackPane();
-			    // add the lineChart to the StackPane
-			    root.getChildren().add(t.getLineChart());
-		        h.getChildren().add(root);
-
-			    vbox.getChildren().add(h);			
-			    // Json array events
-			        
-			    vbox.getChildren().add(root);			// Json array events
-		        JSONArray EventCollection = (JSONArray) timeline.get("Events");
-		        // Foreach each events object
-		        for(Object e : EventCollection)
-		        {
-		        	JSONObject event = (JSONObject) e;
-		        	String TitleEvent = (String) event.get("TitleEvent");
-					String StartDateEvent = (String) event.get("StartDateEvent");
-					DatePicker StartDateNewEvent = new DatePicker(LocalDate.parse(StartDateEvent));
-
-		        	String DescEvent = (String) event.get("DescEvent");
-		        	boolean duration = (boolean) event.get("Duration");
-		        	String imagetype = (String) event.get("ImageType");
-		        	String photos = (String) event.get("Photos");
-		        	BufferedImage image;
-		        	if(!photos.equals(" "))
-		        	{
-		        		byte[] photosByte = Base64.getDecoder().decode(photos);
-			        	ByteArrayInputStream in = new ByteArrayInputStream(photosByte); 
-			        	image = ImageIO.read(in);
-		        	}
-		        	else
-		        	{
-		        		image = null;
-		        	}
-		        	Event newEvent = null ;
-
-		        	if(duration)
-		        	{
-						String EndDateEvent = (String) event.get("EndDateEvent");
-						DatePicker EndDateNewEvent = new DatePicker(LocalDate.parse(EndDateEvent));
-
-			        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent.getValue(),EndDateNewEvent.getValue(),duration,image,imagetype);
-		        	}
-		        	else if(!duration)
-		        	{
-
-			        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent.getValue(),duration,image,imagetype);
-		        	}
-		        	// create an event 
-		        	// create an event 
-		        	// call the addEvent method from the class Timeline
-		        	t.DisplayAddEvent(newEvent);
-
-		        }   
-	         }
-	   }
->>>>>>> d6d5c557fc21563fd340deee7235cc38814bad86
 	}
 	
 	/**
