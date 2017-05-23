@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
-
+// You can find the jar file in the project
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -42,20 +42,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
  * @role This class is the controller class who handle the listeners for the buttons from the 
- * MainTemplate.fxml
+ * CreateMode.fxml
  * @author Meng Li, Frapper Colin
  * @date 04/25/2017
  * @note : You have to include the Json packages to your java project to make it work, the 
  * org.json package and the org.simple.json package
- * 
  */
 public class MainController  {
 
@@ -73,7 +70,7 @@ public class MainController  {
 		Stage stage = new Stage();
         stage.setTitle("Form timeline"); // set the title of the window
         GridPane GP = new GridPane();
-	    Scene scene = new Scene(GP, 320, 180);
+	    Scene scene = new Scene(GP, 320, 150);
 	    stage.setScene(scene);
 	    String  style= getClass().getResource("application.css").toExternalForm(); //link to css file
 	    scene.getStylesheets().add(style);
@@ -82,7 +79,6 @@ public class MainController  {
 		GP.setHgap(10);
 		
 	    DatePicker startDateTimeline = new DatePicker(); 
-	    //startDateTimeline.setValue(LocalDate.now());
 
 	    DatePicker endDateTimeline = new DatePicker();
     	endDateTimeline.setDisable(true);
@@ -101,11 +97,8 @@ public class MainController  {
 	    GP.add(new Label("End Date: "), 0, 2 );
 	    GP.add(endDateTimeline, 1, 2 );
 
-	    Label label = new Label();
-		label.setFont(new Font("Sans Serif",15));
-		label.setTextFill(Color.RED);
-		GP.add(label, 1, 5);
-		GP.add(submit,1,6);
+	   
+		GP.add(submit,1,3);
 	    
 	    stage.show();
 	    
@@ -135,28 +128,27 @@ public class MainController  {
                 	// Creation of the new Timeline
             		if(isYearTimeline(startDateTimeline,endDateTimeline))
             		{
-            			timeline =  new YearTimeline(titleTimeline,startDateTimeline,endDateTimeline);
+            			timeline =  new YearTimeline(titleTimeline,startDateTimeline.getValue(),endDateTimeline.getValue());
+            			timeline.initLineChart();
                     	addTimeline(timeline);
 
             		}
             		else if(isMonthTimeline(startDateTimeline,endDateTimeline))
             		{
-            			timeline = new MonthTimeline(titleTimeline,startDateTimeline,endDateTimeline);
-                    	addTimeline(timeline);
+            			timeline = new MonthTimeline(titleTimeline,startDateTimeline.getValue(),endDateTimeline.getValue());
+            			timeline.initLineChart();
+            			addTimeline(timeline);
             		}
             		else
             		{
-            			timeline = new DayTimeline(titleTimeline,startDateTimeline,endDateTimeline);
-                    	addTimeline(timeline);
+            			timeline = new DayTimeline(titleTimeline,startDateTimeline.getValue(),endDateTimeline.getValue());
+            			timeline.initLineChart();
+            			addTimeline(timeline);
             		}
                 	
                 	// method addTimeline called
                 	stage.close();
     			}
-            	else
-            	{
-            		label.setText("Title cannot be null!");
-            	}
             }
         });
 	}
@@ -180,11 +172,8 @@ public class MainController  {
 
         MenuButton menuButton = new MenuButton("Options");
 
-        //
-        //
         menuButton.getItems().addAll(DeleteTimeLine, AddEvent);
         
-
         vBoxModules.getChildren().add(menuButton);
         	
         StackPane root = new StackPane();
@@ -231,15 +220,14 @@ public class MainController  {
             }
 	    });
 	}
-	
 
 	
-	@SuppressWarnings("unchecked")
 	/**
 	 * @role : method who permit to save the timelines into a Json File choose by the user
 	 * @throws IOException
 	 * @throws JSONException
 	 */
+	@SuppressWarnings("unchecked")
 	public void saveTimelines() throws IOException, JSONException
 	{		
 		
@@ -255,8 +243,8 @@ public class MainController  {
 			JSONArray events = new JSONArray();
 			// add the attributes of a timeline into the JsonObject timeline
 			timeline.put("TitleTimeline" , t.getTitle());
-			timeline.put("StartDateTimeline", t.getStartDate().getValue().toString());
-			timeline.put("EndDateTimeline",  t.getEndDate().getValue().toString());
+			timeline.put("StartDateTimeline", t.getStartDate().toString());
+			timeline.put("EndDateTimeline",  t.getEndDate().toString());
 			
 			// foreach the events of a specific timeline from the list of events of this timeline
 			for(Event e : t.getListEvent())
@@ -293,9 +281,9 @@ public class MainController  {
 				eventObject.put("TitleEvent" , e.getTitleEvent());
 				eventObject.put("DescEvent" , e.getDescEvent());
 				eventObject.put("Duration" , e.isDuration());
-				eventObject.put("StartDateEvent", e.getStartDatePickerEvent().getValue().toString());
+				eventObject.put("StartDateEvent", e.getStartDatePickerEvent().toString());
 				if(e.isDuration())
-					eventObject.put("EndDateEvent",  e.getEndDatePickerEvent().getValue().toString());
+					eventObject.put("EndDateEvent",  e.getEndDatePickerEvent().toString());
 				eventObject.put("Photos", imageString);
 				eventObject.put("ImageType", e.getImageType());
 				// add the event Json object to the Json event array 
@@ -315,8 +303,12 @@ public class MainController  {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save file or replace exists file");
 
-        FileChooser.ExtensionFilter extFilterjson =  new FileChooser.ExtensionFilter("json files (*.json)", "*.json");
-        fileChooser.getExtensionFilters().add(extFilterjson);
+		FileChooser.ExtensionFilter extFiltertxt = 
+                new FileChooser.ExtensionFilter("txt files (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter extFilterjson = 
+                new FileChooser.ExtensionFilter("json files (*.json)", "*.json");
+        fileChooser.getExtensionFilters()
+                .addAll( extFiltertxt, extFilterjson);
 		File file = fileChooser.showSaveDialog(null);
 
 	    if(file != null)
@@ -325,6 +317,10 @@ public class MainController  {
 	    	fw.write(allTimelines.toString());
 	 	    fw.flush();
 	 	    fw.close();
+	    }
+	    else
+	    {
+	    	
 	    }
 	}
 	
@@ -343,94 +339,110 @@ public class MainController  {
         // FileChoose used to choose the which file you want to load
         FileChooser fileChooser = new FileChooser();
         
-        FileChooser.ExtensionFilter extFilterjson = new FileChooser.ExtensionFilter("json files (*.json)", "*.json");
-        fileChooser.getExtensionFilters().addAll(extFilterjson);
+        FileChooser.ExtensionFilter extFiltertxt = 
+                new FileChooser.ExtensionFilter("txt files (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter extFilterjson = 
+                new FileChooser.ExtensionFilter("json files (*.json)", "*.json");
+        fileChooser.getExtensionFilters()
+                .addAll( extFiltertxt, extFilterjson);
 		File file = fileChooser.showOpenDialog(null);
-	    reader=new FileReader(file);  
-
-
-	    // Parse the reader 
-        Object obj = parser.parse(reader);
-        // Get the JsonObject
-        JSONObject content = (JSONObject) obj;
-        // get the array "Timelines" from the JsonObject
-        JSONArray TimelineCollection = (JSONArray) content.get("Timelines");
-
-        // for all object into the JsonArray
-        for(Object o : TimelineCollection)
-        {
-        	// Get the JSONObject
-        	JSONObject timeline = (JSONObject) o;
-			String TitleTimeline = (String) timeline.get("TitleTimeline");
-			String StartDate = (String) timeline.get("StartDateTimeline");
-			String EndDate = (String) timeline.get("EndDateTimeline");
-
-			// Create the DatePicker
-			DatePicker StartDateTimeline = new DatePicker(LocalDate.parse(StartDate));
-			DatePicker EndDateTimeline = new DatePicker(LocalDate.parse(EndDate));
-
-			// Create the timeline with the previous informations
-			
-			Timeline t ;
-
-			if(isYearTimeline(StartDateTimeline,EndDateTimeline))
-    		{
-    			t =  new YearTimeline(TitleTimeline,StartDateTimeline,EndDateTimeline);
-    		}
-    		else if(isMonthTimeline(StartDateTimeline,EndDateTimeline))
-    		{
-    			t = new MonthTimeline(TitleTimeline,StartDateTimeline,EndDateTimeline);
-    		}
-    		else
-    		{
-    			t = new DayTimeline(TitleTimeline,StartDateTimeline,EndDateTimeline);
-    		}
-        	addTimeline(t);
-        	 
-
-			// Json array events
-	        JSONArray EventCollection = (JSONArray) timeline.get("Events");
-	        // Foreach each events object
-	        for(Object e : EventCollection)
+		if(file != null)
+		{
+		    reader=new FileReader(file);  
+		    // Parse the reader 
+	        Object obj = parser.parse(reader);
+	        // Get the JsonObject
+	        JSONObject content = (JSONObject) obj;
+	        // get the array "Timelines" from the JsonObject
+	        JSONArray TimelineCollection = (JSONArray) content.get("Timelines");
+	        
+	        if(TimelineCollection!=null)
 	        {
-	        	JSONObject event = (JSONObject) e;
-	        	String TitleEvent = (String) event.get("TitleEvent");
-				String StartDateEvent = (String) event.get("StartDateEvent");
+	        	// for all object into the JsonArray
+		        for(Object o : TimelineCollection)
+		        {
+		        	// Get the JSONObject
+		        	JSONObject timeline = (JSONObject) o;
+					String TitleTimeline = (String) timeline.get("TitleTimeline");
+					String StartDate = (String) timeline.get("StartDateTimeline");
+					String EndDate = (String) timeline.get("EndDateTimeline");
 
-	        	String DescEvent = (String) event.get("DescEvent");
-	        	boolean duration = (boolean) event.get("Duration");
-	        	Event newEvent = null;
-	        	
-				DatePicker StartDateNewEvent = new DatePicker(LocalDate.parse(StartDateEvent));
-	        	String imagetype = (String) event.get("ImageType");
-	        	String photos = (String) event.get("Photos");
-	        	BufferedImage image;
-	        	if(!photos.equals(" "))
-	        	{
-	        		byte[] photosByte = Base64.getDecoder().decode(photos);
-		        	ByteArrayInputStream in = new ByteArrayInputStream(photosByte); 
-		        	image = ImageIO.read(in);
-	        	}
-	        	else
-	        	{
-	        		image = null;
-	        	}
+					// Create the DatePicker
+					DatePicker StartDateTimeline = new DatePicker(LocalDate.parse(StartDate));
+					DatePicker EndDateTimeline = new DatePicker(LocalDate.parse(EndDate));
 
-	        	if(duration)
-	        	{
-					String EndDateEvent = (String) event.get("EndDateEvent");
-					DatePicker EndDateNewEvent = new DatePicker(LocalDate.parse(EndDateEvent));
-		        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent,EndDateNewEvent,duration,image,imagetype);
-	        	}
-	        	else if(!duration)
-	        	{
+					// Create the timeline with the previous informations
+					
+					Timeline t ;
 
-		        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent,duration,image,imagetype);
-	        	}
-	        	// call the addEvent method from the class Timeline
-	        	t.addEvent(newEvent);
-	        }   
-         }
+					if(isYearTimeline(StartDateTimeline,EndDateTimeline))
+		    		{
+		    			t =  new YearTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
+	        			t.initLineChart();
+		    		}
+		    		else if(isMonthTimeline(StartDateTimeline,EndDateTimeline))
+		    		{
+		    			t = new MonthTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
+	        			t.initLineChart();
+		    		}
+		    		else
+		    		{
+		    			t = new DayTimeline(TitleTimeline,LocalDate.parse(StartDate),LocalDate.parse(EndDate));
+	        			t.initLineChart();
+
+		    		}
+		        	addTimeline(t);
+		        	 
+
+					// Json array events
+			        JSONArray EventCollection = (JSONArray) timeline.get("Events");
+			        
+			        if(EventCollection!=null)
+			        {
+			        	// Foreach each events object
+				        for(Object e : EventCollection)
+				        {
+				        	JSONObject event = (JSONObject) e;
+				        	String TitleEvent = (String) event.get("TitleEvent");
+							String StartDateEvent = (String) event.get("StartDateEvent");
+
+				        	String DescEvent = (String) event.get("DescEvent");
+				        	boolean duration = (boolean) event.get("Duration");
+				        	Event newEvent = null;
+				        	
+							DatePicker StartDateNewEvent = new DatePicker(LocalDate.parse(StartDateEvent));
+				        	String imagetype = (String) event.get("ImageType");
+				        	String photos = (String) event.get("Photos");
+				        	BufferedImage image;
+				        	if(!photos.equals(" "))
+				        	{
+				        		byte[] photosByte = Base64.getDecoder().decode(photos);
+					        	ByteArrayInputStream in = new ByteArrayInputStream(photosByte); 
+					        	image = ImageIO.read(in);
+				        	}
+				        	else
+				        	{
+				        		image = null;
+				        	}
+
+				        	if(duration)
+				        	{
+								String EndDateEvent = (String) event.get("EndDateEvent");
+								DatePicker EndDateNewEvent = new DatePicker(LocalDate.parse(EndDateEvent));
+					        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent.getValue(),EndDateNewEvent.getValue(),duration,image,imagetype);
+				        	}
+				        	else if(!duration)
+				        	{
+
+					        	newEvent = new Event(TitleEvent,DescEvent,StartDateNewEvent.getValue(),duration,image,imagetype);
+				        	}
+				        	// call the addEvent method from the class Timeline
+				        	t.addEvent(newEvent);
+				        }   
+				    }
+		        }
+	        }    
+        }
 	}
 	
 	/**
@@ -464,6 +476,13 @@ public class MainController  {
         endDateTimeline.setDayCellFactory(dayCellFactory);
 	}
 
+	/**
+	 * @role : Method to check if the user has correctly enter the different parameter.
+	 * @param name
+	 * @param startDateTimeline
+	 * @param endDateTimeline
+	 * @return true if it's correct, otherwise false
+	 */
 	protected boolean fill_value(TextField name, DatePicker startDateTimeline, DatePicker endDateTimeline) 
 	{
 		if (name.getText() == null || name.getText().trim().isEmpty()) 
@@ -494,6 +513,12 @@ public class MainController  {
 		return false;
 	}
 
+	/**
+	 * @role : Method to handle the fact that the user don't choose a correct date
+	 * @param startDateTimeline
+	 * @param endDateTimeline
+	 * @return true if it's correct, otherwise false
+	 */
 	protected boolean check_date(DatePicker startDateTimeline, DatePicker endDateTimeline) 
 	{
 		LocalDate start = startDateTimeline.getValue();
@@ -510,6 +535,12 @@ public class MainController  {
 		return true;
 	}
 
+	/**
+	 * @role : Method to test if the timeline is a year timeline
+	 * @param startDateTimeline
+	 * @param endDateTimeline
+	 * @return true if it's a year timeline, otherwise false
+	 */
 	private boolean isYearTimeline(DatePicker startDateTimeline, DatePicker endDateTimeline)
 	{
 		String[] splitStartDateTimeline = startDateTimeline.getValue().toString().split("-");
@@ -524,6 +555,12 @@ public class MainController  {
 			return false ;
 	}
 	
+	/**
+	 * @role : Method to test if the timeline is a month timeline
+	 * @param startDateTimeline
+	 * @param endDateTimeline
+	 * @return true if it's a month timeline, otherwise false
+	 */
 	private boolean isMonthTimeline(DatePicker startDateTimeline, DatePicker endDateTimeline)
 	{
 		String[] splitStartDateTimeline = startDateTimeline.getValue().toString().split("-");
@@ -539,23 +576,6 @@ public class MainController  {
 			return false ;
 	}
 	
-	/*
-	private boolean isDayTimeline(DatePicker startDateTimeline, DatePicker endDateTimeline)
-	{
-		String[] splitStartDateTimeline = startDateTimeline.getValue().toString().split("-");
-		int startYear = Integer.parseInt(splitStartDateTimeline[0]);
-		int startMonth = Integer.parseInt(splitStartDateTimeline[1]);
-		String[] splitEndDateTimeline = endDateTimeline.getValue().toString().split("-");
-		int endYear = Integer.parseInt(splitEndDateTimeline[0]);
-		int endMonth = Integer.parseInt(splitEndDateTimeline[1]);
-
-
-		if(startYear == endYear  && startMonth == endMonth ) 
-			return true ;
-		else
-			return false ;
-	}
-	*/
 }
 		
 

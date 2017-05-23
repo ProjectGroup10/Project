@@ -20,31 +20,27 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
- * @role This class represent the Timeline itself
+ * @role This class represent the Timeline, it's an abstract class
  * @author Meng Li, Frapper Colin
- * @date : 04/25/2017
+ * @date : 05/22/2017
  */
 public abstract class Timeline 
 {
 
 	protected int id = 0 ; 
 	protected String title ; 
-	protected DatePicker startDate ; 
-	protected DatePicker endDate ;
-    //private Image image;
+	protected LocalDate startDate ; 
+	protected LocalDate endDate ;
 
 	// List of events
 	protected ArrayList<Event> listEvent ;
@@ -55,7 +51,13 @@ public abstract class Timeline
 	private String imageType;
 
 
-	public Timeline (String title, DatePicker startTime, DatePicker endTime)
+	/**
+	 * Constructor 
+	 * @param title
+	 * @param startTime
+	 * @param endTime
+	 */
+	public Timeline (String title, LocalDate startTime, LocalDate endTime)
 	{
 		this.title = title ;
 		this.startDate = startTime ;
@@ -66,7 +68,7 @@ public abstract class Timeline
 	 * Getter 
 	 * @return startDate
 	 */
-	public DatePicker getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
 
@@ -75,7 +77,7 @@ public abstract class Timeline
 	 * setter
 	 * @param startDate
 	 */
-	public void setStartDate(DatePicker startDate) {
+	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
 
@@ -84,7 +86,7 @@ public abstract class Timeline
 	 * Getter 
 	 * @return endDate
 	 */
-	public DatePicker getEndDate() {
+	public LocalDate getEndDate() {
 		return endDate;
 	}
 
@@ -92,7 +94,7 @@ public abstract class Timeline
 	 * setter
 	 * @param endDate
 	 */
-	public void setEndDate(DatePicker endDate) {
+	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
 
@@ -166,7 +168,7 @@ public abstract class Timeline
 		GP.setVgap(5);
 		GP.setHgap(10);
 		
-		Scene scene = new Scene(GP,350,400);
+		Scene scene = new Scene(GP,350,360);
 		stage.setScene(scene);
 		CheckBox duration = new CheckBox();
 	    duration.setText("event with duration ?");
@@ -201,9 +203,7 @@ public abstract class Timeline
 	    		}
 	    		else
 	    		{
-	    			endDatePickerEvent.setValue(startDatePickerEvent.getValue());
 	    			GP.getChildren().removeAll(endDate,endDatePickerEvent);
-	    		
 	    		}
 	    		
 			}
@@ -217,11 +217,8 @@ public abstract class Timeline
 		GP.add(addImage, 1, 5);
 		
 		submit.setPrefSize(150, 30);
-		Label label = new Label();
-		label.setFont(new Font("Sans Serif",18));
-		label.setTextFill(Color.RED);
-		GP.add(label, 1, 6);
-		GP.add(submit,1,7);
+		
+		GP.add(submit,1,6);
 		stage.show();
 		
 		
@@ -279,20 +276,14 @@ public abstract class Timeline
             	{
 					if(duration.isSelected())
 					{
-	                   	event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,true,bufferedImage,imageType);
+	                   	event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent.getValue(),endDatePickerEvent.getValue(),true,bufferedImage,imageType);
 					}
 	        	    else
-	                   	 event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,false,bufferedImage,imageType);
+	                   	 event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent.getValue(),false,bufferedImage,imageType);
 
 					addEvent(event);
-					
 	            	stage.close();
             	}
-        	    else
-				{
-					label.setText("Title cannot be null!");
-				}
-
             }
         });
 	    
@@ -301,15 +292,14 @@ public abstract class Timeline
 	}
 	
 
-
 	/**
 	 * @role method addEvent who permit to add an event to the line chart, and to the list of 
 	 * event corresponding at the special timeline
 	 * @param event
 	 */
-	public abstract void addEvent(Event event);
+	public abstract void addEvent(Event event);	
+	public abstract void DisplayAddEvent(Event event);	
 
-	
 	
 	/**
 	 * @role method who "transform" the integer passed in parameters into the corresponding 
@@ -397,12 +387,12 @@ public abstract class Timeline
 	                public void updateItem(LocalDate item, boolean empty) 
 	                {
 	                    super.updateItem(item, empty);
-	                    if (item.isBefore(startDate.getValue().plusDays(0))) 
+	                    if (item.isBefore(startDate.plusDays(0))) 
 	                    {
 	                    	setDisable(true);
 	                        setStyle("-fx-background-color: #ffc0cb;");
 	                    }
-	                    if(item.isAfter(endDate.getValue()))
+	                    if(item.isAfter(endDate))
 	                    {
 	                    	setDisable(true);
 	                        setStyle("-fx-background-color: #ffc0cb;");
@@ -421,6 +411,121 @@ public abstract class Timeline
 	            };
 	        }
 		};
+		final Callback<DatePicker, DateCell> dayCell = new Callback<DatePicker, DateCell>() 
+		{      
+	        public DateCell call(final DatePicker datePicker) 
+	        {
+	            return new DateCell() 
+	            {
+	                public void updateItem(LocalDate item, boolean empty) 
+	                {
+	                    super.updateItem(item, empty);
+	                    if (item.isBefore(startDate.plusDays(0))) 
+	                    {
+	                    	setDisable(true);
+	                        setStyle("-fx-background-color: #ffc0cb;");
+	                    }
+	                    if(item.isAfter(endDate))
+	                    {
+	                    	setDisable(true);
+	                        setStyle("-fx-background-color: #ffc0cb;");
+	                    }
+	                    if(startDateEvent.getValue()!=null)
+	                    {
+	                    	if(item.isBefore(startDate.plusDays(1)))
+		                    {
+		                    	setDisable(true);
+		                        setStyle("-fx-background-color: #ffc0cb;");
+		                    }
+		                    long days = ChronoUnit.DAYS.between(startDateEvent.getValue(), item);
+		                    setTooltip(new Tooltip("You're choose " + days + " days"));
+	                    }
+	                }
+	            };
+	        }
+		};
+		startDateEvent.setDayCellFactory(dayCell);
+		endDateEvent.setDayCellFactory(dayCellFactory);
+	}
+	
+	/**
+	 * @role : This method has been created to insure that a user can select an endDate after
+	 * the startDate
+	 * @param startDateTimeline
+	 * @param endDateTimeline
+	 */
+	public void setDatePick(DatePicker startDateEvent, DatePicker endDateEvent)
+	{
+		//startDateEvent.setValue(startDate.getValue());
+		// To discuss
+		//endDateEvent.setValue(startDate.getValue());
+		final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() 
+		{      
+	        public DateCell call(final DatePicker datePicker) 
+	        {
+	            return new DateCell() 
+	            {
+	                public void updateItem(LocalDate item, boolean empty) 
+	                {
+	                    super.updateItem(item, empty);
+	                    if (item.isBefore(startDate.plusDays(0))) 
+	                    {
+	                    	setDisable(true);
+	                        setStyle("-fx-background-color: #ffc0cb;");
+	                    }
+	                    if(item.isAfter(endDate))
+	                    {
+	                    	setDisable(true);
+	                        setStyle("-fx-background-color: #ffc0cb;");
+	                    }
+	                    if(startDateEvent.getValue()!=null)
+	                    {
+	                    	if(item.isBefore(startDateEvent.getValue().plusDays(0)))
+		                    {
+		                    	setDisable(true);
+		                        setStyle("-fx-background-color: #ffc0cb;");
+		                    }
+		                    long days = ChronoUnit.DAYS.between(startDateEvent.getValue(), item);
+		                    setTooltip(new Tooltip("You're choose " + days + " days"));
+	                    }
+	                }
+	            };
+	        }
+		};
+		final Callback<DatePicker, DateCell> dayCell = new Callback<DatePicker, DateCell>() 
+		{      
+	        public DateCell call(final DatePicker datePicker) 
+	        {
+	            return new DateCell() 
+	            {
+	                public void updateItem(LocalDate item, boolean empty) 
+	                {
+	                    super.updateItem(item, empty);
+	                    if (item.isBefore(startDate.plusDays(0))) 
+	                    {
+	                    	setDisable(true);
+	                        setStyle("-fx-background-color: #ffc0cb;");
+	                    }
+	                    if(item.isAfter(endDate))
+	                    {
+	                    	setDisable(true);
+	                        setStyle("-fx-background-color: #ffc0cb;");
+	                    }
+	                    if(startDateEvent.getValue()!=null)
+	                    {
+	                    	if(item.isBefore(startDate.plusDays(0)))
+		                    {
+		                    	setDisable(true);
+		                        setStyle("-fx-background-color: #ffc0cb;");
+		                    }
+		                    long days = ChronoUnit.DAYS.between(startDateEvent.getValue(), item);
+		                    setTooltip(new Tooltip("You're choose " + days + " days"));
+	                    }
+	                }
+	            };
+	        }
+		};
+		startDateEvent.setDayCellFactory(dayCell);
 		endDateEvent.setDayCellFactory(dayCellFactory);
 	}
 
@@ -430,7 +535,6 @@ public abstract class Timeline
 	 */
 	public void modifyEvent(Event e)
 	{
-		listEvent.remove(e);
 		addEventModified(e);
 	}
 	
@@ -441,8 +545,6 @@ public abstract class Timeline
 	 */
 	public void addEventModified(Event e)
 	{
-		
-		
 		Stage stage = new Stage();
         stage.setTitle("Form add modified event");
 	    GridPane GP = new GridPane();
@@ -458,23 +560,23 @@ public abstract class Timeline
         TextField nameEvent = new TextField();
         nameEvent.setText(e.getTitleEvent());
 	    DatePicker startDatePickerEvent = new DatePicker();
-	    startDatePickerEvent.setValue(e.getStartDatePickerEvent().getValue());
+	    startDatePickerEvent.setValue(e.getStartDatePickerEvent());
 	    DatePicker endDatePickerEvent = new DatePicker();
 	    TextArea DescField = new TextArea();
 	    DescField.setText(e.getDescEvent());
 		setDatePicker(startDatePickerEvent,endDatePickerEvent);
 	    Button addImage = new Button("Choose");
         Button submit = new Button("Submit");
-        Label label = new Label();
-		label.setFont(new Font("Sans Serif",18));
-		label.setTextFill(Color.RED);
 		GP.add(new Text("Event name: "), 0, 0 );
 	    GP.add(nameEvent, 1, 0 );
 	    GP.add(new Text("Start Date: "), 0, 1 );
 	    GP.add(startDatePickerEvent, 1, 1 );
+	    Text endDate = new Text("End Date: ");
+
+	   
 	    GP.add(duration, 1, 2 );
 
-	    Text endDate = new Text("End Date: ");
+
 	    duration.setOnAction(new EventHandler<ActionEvent>()
 	    {
 	    	public void handle(ActionEvent arg0) 
@@ -484,10 +586,11 @@ public abstract class Timeline
 	    		    GP.add(endDate, 0, 3);
 	    		    GP.add(endDatePickerEvent, 1, 3 );
 	    		    if(e.isDuration())
-	    		    	endDatePickerEvent.setValue(e.getEndDatePickerEvent().getValue());
+	    		    	endDatePickerEvent.setValue(e.getEndDatePickerEvent());
 	    		}
 	    		else
 	    		{
+	    			endDatePickerEvent.setValue(null);
 	    			GP.getChildren().removeAll(endDate,endDatePickerEvent);
 	    		}
 	    		
@@ -500,17 +603,12 @@ public abstract class Timeline
 		GP.add(new Text("Add Image:"), 0, 5);
 		GP.add(addImage, 1, 5);
 		
-		GP.add(label, 1, 6);
-	    GP.add(submit, 1, 7);
+	    GP.add(submit, 1, 6);
 	    stage.show();
 
 
         setDatePicker(startDatePickerEvent,endDatePickerEvent);
-
-		label.setFont(new Font("Sans Serif",18));
-		label.setTextFill(Color.RED);
 	    
-	    // listener when cliking on addImage
 	    // listener when cliking on addImage
 	    addImage.setOnAction(new EventHandler<ActionEvent>() 
 	    {
@@ -551,26 +649,22 @@ public abstract class Timeline
             public void handle(ActionEvent e1) 
             {
             	// delete the previous event 
-            	deleteEvent(e);
 				Event event;
 				if (!fill_value(nameEvent,startDatePickerEvent,endDatePickerEvent,duration.isSelected()) && check_date(startDatePickerEvent,endDatePickerEvent)) 
 	            {
 					if(duration.isSelected())
 					{
-	                   	event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,endDatePickerEvent,true,bufferedImage,imageType);
+	                   	event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent.getValue(),endDatePickerEvent.getValue(),true,e.getImageEvent(),e.getImageType());
 					}
 	        	    else
-	                   	 event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent,false,bufferedImage,imageType);
+	                   	 event = new Event(nameEvent.getText(),DescField.getText(),startDatePickerEvent.getValue(),false,e.getImageEvent(),e.getImageType());
+
+	            	deleteEvent(e);
 
 					addEvent(event);
-						
+
 	            	stage.close();
         		}
-        	    else
-				{
-					label.setText("Title cannot be null!");
-				}
-  
             }
         });
 
