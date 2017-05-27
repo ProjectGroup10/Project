@@ -83,7 +83,6 @@ public class MainController  {
 	    DatePicker endDateTimeline = new DatePicker();
     	endDateTimeline.setDisable(true);
 	    
-
         TextField name = new TextField();
         Button submit = new Button("Submit");
         submit.setPrefSize(120, 40);
@@ -96,17 +95,15 @@ public class MainController  {
 	    GP.add(startDateTimeline, 1, 1 );
 	    GP.add(new Label("End Date: "), 0, 2 );
 	    GP.add(endDateTimeline, 1, 2 );
-
 	   
 		GP.add(submit,1,3);
-	    
 	    stage.show();
-	    
-	    
+	   
 	    startDateTimeline.setOnAction(new EventHandler<ActionEvent>(){
 
 			public void handle(ActionEvent arg0) 
 			{
+				// unless the user didn't choose the start date he cannot choose the end date. 
 		    	endDateTimeline.setDisable(false);
 			}	
 	    });
@@ -214,9 +211,7 @@ public class MainController  {
                 	vBoxModules.getChildren().remove(h);	
                 	// Timeline removed from the list TimelineCollection
                 	TimelineCollection.remove(t);
-            	
             	} 
-            	
             }
 	    });
 	}

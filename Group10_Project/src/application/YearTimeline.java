@@ -245,12 +245,10 @@ public class YearTimeline extends Timeline {
 						    // Create three different buttons
 						    VBox vbox = new VBox();
 						    vbox.setPadding(new Insets(10,10,10,10));
-						    //Scene scene = new Scene(vbox, 400, 400);
 						    StackPane s = new StackPane(vbox);
 						    
-						    //stage.setScene(scene);*/
 						    Label text = null ;
-					    	String description = parseString(listEvent.get(i).getDescEvent());
+					    	String description = listEvent.get(i).getDescEvent();
 
 					    	if(description.isEmpty())
 					    	{
@@ -533,12 +531,10 @@ public class YearTimeline extends Timeline {
 						    // Create three different buttons
 						    VBox vbox = new VBox();
 						    vbox.setPadding(new Insets(10,10,10,10));
-						    //Scene scene = new Scene(vbox, 400, 400);
 						    StackPane s = new StackPane(vbox);
 						    
-						    //stage.setScene(scene);*/
 						    Label text = null ;
-					    	String description = parseString(listEvent.get(i).getDescEvent());
+					    	String description = listEvent.get(i).getDescEvent();
 
 					    	if(description.isEmpty())
 					    	{

@@ -21,6 +21,7 @@ public class Main extends Application
 			Scene scene = new Scene(root1, 500,400);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
+			primaryStage.setTitle("Start Page");
 			primaryStage.show();
 
 		} 

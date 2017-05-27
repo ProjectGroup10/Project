@@ -65,6 +65,7 @@ public class DayTimeline extends Timeline
     	int diffdays = endDay-startDay ;
     	
     	ObservableList<String> days = FXCollections.observableArrayList() ;
+    	
     	// create the x axis
     	for(int i = startDay ; i<= endDay ; i++)
     	{
@@ -127,14 +128,12 @@ public class DayTimeline extends Timeline
         lineChart.getData().add(event.getSeries());	
         
         // for each data for a series
-
         for (XYChart.Data<String, Number> ss :  event.getSeries().getData()) 
         {
         	
         	// tooltip permit to display title, start and end date when just passing the mouse over the event
         	ss.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED,new EventHandler<MouseEvent>() 
 			{
-
 				public void handle(MouseEvent e) 
 				{
 				    String text = null ;
@@ -174,8 +173,9 @@ public class DayTimeline extends Timeline
 										"Start date event : " + StartDate + "\n" );
 							}
 		        		}
+						// Tooltip when you pass the mouse over the event
 						Tooltip tool = new Tooltip(text);
-						Tooltip.install( ss.getNode(), tool);
+						Tooltip.install(ss.getNode(), tool);
 		        	}
 				}
 			});
@@ -223,8 +223,8 @@ public class DayTimeline extends Timeline
 						    
 						    Label text = null ;
 						    // using the method parse string to handle event with a too long duration
-						    String description = parseString(ev.getDescEvent());
 
+						    String description = ev.getDescEvent();
 					    	if(description.isEmpty())
 					    	{
 					    		description = "none" ;
@@ -313,7 +313,6 @@ public class DayTimeline extends Timeline
 		        		        	popover.setArrowLocation(ArrowLocation.RIGHT_CENTER);
 							}
 		        				popover.show(ss.getNode());
-
 						}
 		        		
 		        		 // Listener for the delete button
@@ -373,38 +372,34 @@ public class DayTimeline extends Timeline
     	listEvent.add(event);
 
     	String StartDate = event.getStartDatePickerEvent().toString();
-			String EndDate = "" ;
-	    	String[] splitStartDate = StartDate.split("-");
-	    	int startDay = Integer.parseInt(splitStartDate[2]);
-	    	// call the method chooseMonth depending on which month is selected
+		String EndDate = "" ;
+    	String[] splitStartDate = StartDate.split("-");
+    	int startDay = Integer.parseInt(splitStartDate[2]);
 	    		
-	    	// if it's a duration then add an endDate
-			if(event.isDuration())
-			{
-				EndDate = event.getEndDatePickerEvent().toString();
-		    	String[] splitEndDate = EndDate.split("-");
-		    	int endDay = Integer.parseInt(splitEndDate[2]);
+    	// if it's a duration then add an endDate
+		if(event.isDuration())
+		{
+			EndDate = event.getEndDatePickerEvent().toString();
+	    	String[] splitEndDate = EndDate.split("-");
+	    	int endDay = Integer.parseInt(splitEndDate[2]);
 
-
-		    	// add the event to the lineChart, using a series from the class event
-		        event.getSeries().setName(event.getTitleEvent());
-		        event.getSeries().getData().add(new XYChart.Data<String, Number>(Integer.toString(startDay), listEvent.size() + 2));
-		        event.getSeries().getData().add(new XYChart.Data<String, Number>(Integer.toString(endDay), listEvent.size() + 2));
-			}
-			else // it's a non duration event
-			{
-				 event.getSeries().setName(event.getTitleEvent());
-				 event.getSeries().getData().add(new XYChart.Data<String, Number>(Integer.toString(startDay), listEvent.size() + 2));
-			}
+	    	// add the event to the lineChart, using a series from the class event
+	        event.getSeries().setName(event.getTitleEvent());
+	        event.getSeries().getData().add(new XYChart.Data<String, Number>(Integer.toString(startDay), listEvent.size() + 2));
+	        event.getSeries().getData().add(new XYChart.Data<String, Number>(Integer.toString(endDay), listEvent.size() + 2));
+		}
+		else // it's a non duration event
+		{
+			 event.getSeries().setName(event.getTitleEvent());
+			 event.getSeries().getData().add(new XYChart.Data<String, Number>(Integer.toString(startDay), listEvent.size() + 2));
+		}
 			
-			// add the series to the lineChart
-	        lineChart.getData().add(event.getSeries());	
+		// add the series to the lineChart
+        lineChart.getData().add(event.getSeries());	
 	      		
 		// for each data for a series
-		
 		for (XYChart.Data<String, Number> ss :  event.getSeries().getData()) 
 		{
-			
 			// tooltip permit to display something when just passing the mouse over the event
 			ss.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED,new EventHandler<MouseEvent>() 
 			{
@@ -414,38 +409,38 @@ public class DayTimeline extends Timeline
 			
 					for(int i = 0 ; i< listEvent.size() ; i++)
 					{
+        				Event ev = listEvent.get(i);
+
 						LocalDate a = event.getStartDatePickerEvent();
 						LocalDate d = a ;
 						if(event.isDuration())
 							d = event.getEndDatePickerEvent();
 			
-						LocalDate b = listEvent.get(i).getStartDatePickerEvent();
+						LocalDate b = ev.getStartDatePickerEvent();
 						
 						LocalDate c = b ;
-						if (listEvent.get(i).isDuration())
-							c = listEvent.get(i).getEndDatePickerEvent();
+						if (ev.isDuration())
+							c = ev.getEndDatePickerEvent();
 						if(a.isEqual(b) || a.isEqual(c) || b.isEqual(d) || c.isEqual(d))
 			    		{
-							if(listEvent.get(i).isDuration())
+							if(ev.isDuration())
 							{
 			
-								text = new String("Title Event:  " + listEvent.get(i).getTitleEvent() + "\n" +
-						"Start date event: " + StartDate + "\n" + 
-						"End date event: " + listEvent.get(i).getEndDatePickerEvent().toString() + "\n" );
+								text = new String("Title Event:  " + ev.getTitleEvent() + "\n" +
+										"Start date event: " + StartDate + "\n" + 
+										"End date event: " + ev.getEndDatePickerEvent().toString() + "\n" );
 							}
 							else
 							{
 			
-								text = new String("Title Event :  " + listEvent.get(i).getTitleEvent() + "\n" +
+								text = new String("Title Event :  " + ev.getTitleEvent() + "\n" +
 										"Start date event : " + StartDate + "\n" );
 							}
 			    		}
 						Tooltip tool = new Tooltip(text);
 						Tooltip.install( ss.getNode(), tool);
 			    	}
-			
 				}
-				
 			});
 			
 			// when clicking on the event 
@@ -455,10 +450,12 @@ public class DayTimeline extends Timeline
 				{
 					for(int i = 0 ; i< listEvent.size() ; i++)
 			    	{
+        				Event ev = listEvent.get(i);
+
 					    Image im;
 					    if(listEvent.get(i).getImageEvent() != null)
 					    {
-						    im = SwingFXUtils.toFXImage(listEvent.get(i).getImageEvent(), null);
+						    im = SwingFXUtils.toFXImage(ev.getImageEvent(), null);
 					    }
 					    else
 					    {
@@ -476,11 +473,11 @@ public class DayTimeline extends Timeline
 						if(event.isDuration())
 							d = event.getEndDatePickerEvent();
 						
-						LocalDate b = listEvent.get(i).getStartDatePickerEvent();
+						LocalDate b = ev.getStartDatePickerEvent();
 						
 						LocalDate c = b ;
-						if (listEvent.get(i).isDuration())
-							c = listEvent.get(i).getEndDatePickerEvent();
+						if (ev.isDuration())
+							c = ev.getEndDatePickerEvent();
 						Button close = new Button("Close");
 						close.setPrefSize(90, 20);
 						  
@@ -491,24 +488,24 @@ public class DayTimeline extends Timeline
 							StackPane s = new StackPane(vbox);
 						
 							Label text = null ;
-							String description = parseString(listEvent.get(i).getDescEvent());
+							String description = ev.getDescEvent();
 						
 							if(description.isEmpty())
 							{
 								description = "none" ;
 							}
 							// if the event is a duration event
-							if(listEvent.get(i).isDuration())
+							if(ev.isDuration())
 							{
 							
-								text = new Label("Title Event:  " + listEvent.get(i).getTitleEvent() + "\n" +
+								text = new Label("Title Event:  " + ev.getTitleEvent() + "\n" +
 									"Start date event: " + StartDate + "\n" + 
-									"End date event: " + listEvent.get(i).getEndDatePickerEvent().toString() + "\n" + 
+									"End date event: " + ev.getEndDatePickerEvent().toString() + "\n" + 
 									"Description: " + description );
 								text.setTextFill(Color.BLACK);
 							
 							
-								if(listEvent.get(i).getImageEvent() != null)
+								if(ev.getImageEvent() != null)
 								{
 									vbox.getChildren().add(image);
 								}
@@ -527,28 +524,26 @@ public class DayTimeline extends Timeline
 							}
 							else
 							{
-								text = new Label("Title Event:  " + listEvent.get(i).getTitleEvent() + "\n" +
+								text = new Label("Title Event:  " + ev.getTitleEvent() + "\n" +
 										"Start date event: " + StartDate + "\n" + 
 										"Description: " + description );
 								
 								text.setTextFill(Color.BLACK);
-								if(listEvent.get(i).getImageEvent() != null)
+								if(ev.getImageEvent() != null)
 								{
 									vbox.getChildren().add(image);
 								}
 								vbox.getChildren().addAll(text,close);
 							    vbox.setStyle("-fx-background-color: white;");
-							
-									
+												
 						        StackPane root = new StackPane();
-						        root.getChildren().addAll(s);
+						        root.getChildren().add(s);
 						        root.setPadding(new Insets(10));
 						        popover.setContentNode(s);
 						        if(i%2 ==0)
 						        	popover.setArrowLocation(ArrowLocation.LEFT_CENTER);
 						        else
 						        	popover.setArrowLocation(ArrowLocation.RIGHT_CENTER);
-							
 								popover.show(ss.getNode());
 							}
 						}
@@ -560,10 +555,8 @@ public class DayTimeline extends Timeline
 								popover.hide();
 							}
 					    });
-		        	}
-			    			
-				}
-			    		
+		        	}			
+				}	
 			});    
 		}		
 	}

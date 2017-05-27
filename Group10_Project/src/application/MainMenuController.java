@@ -29,6 +29,7 @@ public class MainMenuController
 		Scene scene = new Scene(root1, 1000,800);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setScene(scene);
+		primaryStage.setTitle("Create Mode");
 		primaryStage.show();
 	}
 	/**
@@ -43,6 +44,7 @@ public class MainMenuController
 		Scene scene = new Scene(root1, 1000,800);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setScene(scene);
+		primaryStage.setTitle("Display Mode");
 		primaryStage.show();
 	}
 }

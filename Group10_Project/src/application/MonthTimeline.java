@@ -245,7 +245,7 @@ public class MonthTimeline extends Timeline
 						    StackPane s = new StackPane(vbox);
 						    
 						    Label text = null ;
-					    	String description = parseString(ev.getDescEvent());
+					    	String description = ev.getDescEvent();
 
 					    	if(description.isEmpty())
 					    	{
@@ -485,7 +485,7 @@ public class MonthTimeline extends Timeline
 						    StackPane s = new StackPane(vbox);
 						    
 						    Label text = null ;
-					    	String description = parseString(listEvent.get(i).getDescEvent());
+					    	String description = listEvent.get(i).getDescEvent();
 
 					    	if(description.isEmpty())
 					    	{

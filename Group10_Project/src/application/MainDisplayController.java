@@ -108,7 +108,7 @@ public class MainDisplayController {
 				    vbox.getChildren().add(h);			
 				    // Json array events
 				        
-				    vbox.getChildren().add(root);			// Json array events
+				    // Json array events
 			        JSONArray EventCollection = (JSONArray) timeline.get("Events");
 			        
 			        if(EventCollection!=null)
